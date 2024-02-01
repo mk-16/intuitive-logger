@@ -1,0 +1,22 @@
+{
+  "name": "intuitive-logger",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/decorator.js",
+  "scripts": {
+    "test": "test",
+    "dev": "nodemon"
+  },
+  "author": "Michael Laloush",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.10.8",
+    "@types/stack-trace": "^0.0.33",
+    "nodemon": "^3.0.1",
+    "reflect-metadata": "^0.2.1",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "rxjs": "^7.8.1"
+  }
+}

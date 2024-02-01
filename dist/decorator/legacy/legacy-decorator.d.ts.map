@@ -1,0 +1,1 @@
+{"version":3,"file":"legacy-decorator.d.ts","sourceRoot":"","sources":["../../../src/decorator/legacy/legacy-decorator.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,EAAE,KAAK,EAAE,MAAM,mBAAmB,CAAC;AAE/C,8BAAsB,eAAe;IACjC,MAAM,CAAC,QAAQ,CAAC,GAAG,IAAI,EAAE,OAAO,EAAE,GAAG,KAAK,GAAG,IAAI;IAwCjD,MAAM,CAAC,uBAAuB,CAAC,GAAG,IAAI,EAAE,OAAO,EAAE,GAAG,IAAI;CAW3D"}
