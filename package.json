@@ -2,7 +2,9 @@
   "name": "intuitive-logger",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/decorator.js",
+  "main": "./dist/index.js",
+  "type": "module",
+  "types": "./dist/types",
   "scripts": {
     "test": "test",
     "dev": "nodemon"
@@ -14,6 +16,7 @@
     "@types/stack-trace": "^0.0.33",
     "nodemon": "^3.0.1",
     "reflect-metadata": "^0.2.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },
   "dependencies": {
