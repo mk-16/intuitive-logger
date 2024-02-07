@@ -2,7 +2,7 @@
 import { BrowserConfig } from "./environments/browser.env";
 import { NodeConfig } from "./environments/node.env";
 
-export * from "./core/logger"
+export * from "./core/logger/logger"
 
 if (BrowserConfig.location === null) {
  const a = ''

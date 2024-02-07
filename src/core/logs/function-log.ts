@@ -1,19 +1,4 @@
-import { randomUUID } from "crypto";
-
-export class BaseLog {
-    //TODO update precision of date to support differences in milliseconds
-    public date = new Date();
-    public trace = new Error().stack?.split('\n').slice(4).map(str => str.split('(')[1].split(')')[0])[0];
-    print() {
-        console.log(this);
-    }
-}
-
-export class ObjectLog extends BaseLog {
-    constructor(public previousValue: any, public updatedValue: any) {
-        super();
-    }
-}
+import { BaseLog } from "./base-log";
 
 export class FunctionLog extends BaseLog {
     public executionTime: string;

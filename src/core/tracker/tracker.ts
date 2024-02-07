@@ -1,7 +1,8 @@
 import { randomUUID } from "crypto";
-import { FunctionLog, ObjectLog } from "./log";
-import { LoggerStateManager } from "./state-manager";
-import { trackingConfiguration } from "./logger";
+import { LoggerStateManager } from "../state-manager/state-manager";
+import { trackingConfiguration } from "./types";
+import { ObjectLog } from "../logs/object-log";
+import { FunctionLog } from "../logs/function-log";
 
 export abstract class Tracker {
     //TODO: currently cannot track changes to the target's properties made inside the target's method, unless tracked explicitly NEED FIX

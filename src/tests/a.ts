@@ -1,22 +1,6 @@
-import { randomUUID } from "crypto";
-import { LoggerStateManager } from "./state-manager";
-import { Tracker } from "./tracker";
+import { Logger } from "../core/logger/logger";
+import { LoggerStateManager } from "../core/state-manager/state-manager";
 
-export interface trackingConfiguration {
-    uuid: string;
-}
-export class Logger {
-    private stateManager = LoggerStateManager;
-    static track<T extends object>(target: T, options?: trackingConfiguration): T
-    static track<T extends any[], K>(target: (..._: T) => K, options?: trackingConfiguration) {
-        if (typeof target === 'object') {
-            return Tracker.trackObject(target, options)
-        }
-        return Tracker.trackFunction(target, options)
-    }
-}
-
-const myFloorUUID = randomUUID()
 function myAsyncFoo(a: string, b: boolean, c: number) {
     return new Promise((resolve) => {
         setTimeout(() => {

@@ -1,4 +1,4 @@
-import { BaseLog } from './log';
+import { BaseLog } from "../logs/base-log";
 
 export class LoggerStateManager {
     //TODO check option for weakMap
