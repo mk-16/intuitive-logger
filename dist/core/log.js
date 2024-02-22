@@ -5,11 +5,16 @@ class BaseLog {
     constructor() {
         var _a;
         this.date = new Date();
+        this.num = 0;
         this.trace = (_a = new Error().stack) === null || _a === void 0 ? void 0 : _a.split('\n').slice(4).map(str => str.split('(')[1].split(')')[0])[0];
     }
-    // constructor() { }
     print() {
         console.log(this);
+    }
+    updateSelf(some) {
+        console.log('called', { some });
+        this.date = new Date();
+        this.num = 3;
     }
 }
 exports.BaseLog = BaseLog;
@@ -18,7 +23,6 @@ class ObjectLog extends BaseLog {
         super();
         this.previousValue = previousValue;
         this.updatedValue = updatedValue;
-        this.print();
     }
 }
 exports.ObjectLog = ObjectLog;
@@ -29,17 +33,12 @@ class FunctionLog extends BaseLog {
         this.inputs = inputs;
         this.output = output;
         this.executionTime = (endTime - startTime).toFixed(4).concat(' ms');
-        if (this.output instanceof Promise) {
+        if (this.output instanceof Promise)
             this.output.then((results) => {
                 const endTime = performance.now();
                 this.executionTime = (endTime - startTime).toFixed(4).concat(' ms');
                 this.output = results;
-                this.print();
             });
-        }
-        else {
-            this.print();
-        }
     }
 }
 exports.FunctionLog = FunctionLog;

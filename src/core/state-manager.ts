@@ -1,4 +1,4 @@
-import { BaseLog } from './log';
+import { BaseLog, FunctionLog } from './log';
 
 export class LoggerStateManager {
     private static state = new Map<any, BaseLog[]>();
@@ -12,7 +12,14 @@ export class LoggerStateManager {
         this.state.get(key)?.push(log)
     }
 
-    public static getState() {
+    public static async getState() {
+        for (const [key, logs] of this.state) {
+            for (const log of logs) {
+                if (log instanceof FunctionLog && log.output instanceof Promise) {
+                    await log.output
+                }
+            }
+        }
         return this.state
     }
 }

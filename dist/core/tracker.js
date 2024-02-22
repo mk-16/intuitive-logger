@@ -4,8 +4,8 @@ exports.Tracker = void 0;
 const log_1 = require("./log");
 const state_manager_1 = require("./state-manager");
 class Tracker {
-    static trackObject(target) {
-        const stateKey = target;
+    static trackObject(target, label) {
+        const stateKey = label !== null && label !== void 0 ? label : target;
         return new Proxy(target, {
             get(target, property) {
                 return target[property];

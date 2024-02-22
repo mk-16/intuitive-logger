@@ -3,8 +3,8 @@ import { LoggerStateManager } from "./state-manager";
 
 export abstract class Tracker {
     private static stateManager = LoggerStateManager;
-    static trackObject(target: { [key: string | symbol]: any }) {
-        const stateKey = target;
+    static trackObject(target: { [key: string | symbol]: any }, label?: string) {
+        const stateKey = label ?? target;
         return new Proxy(target, {
             get(target, property) {
                 return target[property]

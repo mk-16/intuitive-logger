@@ -2,7 +2,7 @@ export declare abstract class Tracker {
     private static stateManager;
     static trackObject(target: {
         [key: string | symbol]: any;
-    }): {
+    }, label?: string): {
         [key: string]: any;
         [key: symbol]: any;
     };
