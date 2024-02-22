@@ -14,7 +14,7 @@ class Tracker {
                 state_manager_1.LoggerStateManager.mapKey(stateKey);
                 const oldVal = target[property];
                 target[property] = newValue;
-                const log = new log_1.ObjectLog(newValue, oldVal);
+                const log = new log_1.ObjectLog(oldVal, newValue);
                 state_manager_1.LoggerStateManager.updateState(stateKey, log);
                 return true;
             },

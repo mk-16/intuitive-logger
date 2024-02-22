@@ -1,9 +1,7 @@
 export declare class BaseLog {
     date: Date;
-    num: number;
     trace: string | undefined;
     print(): void;
-    updateSelf(some: any): void;
 }
 export declare class ObjectLog extends BaseLog {
     previousValue: any;

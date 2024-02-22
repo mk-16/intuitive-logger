@@ -1,15 +1,14 @@
 export class BaseLog {
     public date = new Date();
-    public num = 0
     public trace = new Error().stack?.split('\n').slice(4).map(str => str.split('(')[1].split(')')[0])[0];
     print() {
         console.log(this);
     }
-    updateSelf(some: any) {
-        console.log('called', { some })
-        this.date = new Date();
-        this.num = 3;
-    }
+    // updateSelf(some: any) {
+    //     console.log('called', { some })
+    //     this.date = new Date();
+    //     this.num = 3;
+    // }
 
 }
 

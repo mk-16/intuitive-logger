@@ -14,7 +14,7 @@ export abstract class Tracker {
                 const oldVal = target[property];
                 target[property] = newValue;
 
-                const log = new ObjectLog(newValue, oldVal)
+                const log = new ObjectLog(oldVal, newValue)
                 LoggerStateManager.updateState(stateKey, log)
                 return true;
             },

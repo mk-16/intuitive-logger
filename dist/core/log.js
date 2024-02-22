@@ -5,16 +5,15 @@ class BaseLog {
     constructor() {
         var _a;
         this.date = new Date();
-        this.num = 0;
         this.trace = (_a = new Error().stack) === null || _a === void 0 ? void 0 : _a.split('\n').slice(4).map(str => str.split('(')[1].split(')')[0])[0];
+        // updateSelf(some: any) {
+        //     console.log('called', { some })
+        //     this.date = new Date();
+        //     this.num = 3;
+        // }
     }
     print() {
         console.log(this);
-    }
-    updateSelf(some) {
-        console.log('called', { some });
-        this.date = new Date();
-        this.num = 3;
     }
 }
 exports.BaseLog = BaseLog;
