@@ -7,6 +7,7 @@ export abstract class Tracker {
         const stateKey = label ?? target;
         return new Proxy(target, {
             get(target, property) {
+                
                 return target[property]
             },
             set(target, property, newValue) {
