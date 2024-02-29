@@ -1,3 +1,4 @@
+import { LoggerStateManager } from "../state-manager/state-manager";
 import { Tracker } from "../tracker/tracker";
 import { trackingConfiguration } from "../tracker/types";
 
@@ -9,5 +10,4 @@ export class Logger {
         }
         return Tracker.trackFunction(target, options)
     }
-    //TODO other functionalities other than track
 }
