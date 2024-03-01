@@ -1,4 +1,4 @@
-import { BaseLog } from "../base-log/base-log";
+import { BaseLog } from "../base-log/base-log.js";
 
 export class FunctionLog extends BaseLog {
     constructor(

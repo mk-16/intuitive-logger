@@ -1,27 +1,16 @@
 import { BehaviorSubject, of } from "rxjs";
-import { BaseLog } from "../logs/base-log/base-log";
-import { FunctionLog } from "../logs/function-log/function-log";
 import { UUID, randomUUID } from "crypto";
-export class LoggerStateManager {
+import { BaseLog } from "../../models/logs/base-log/base-log.js";
+export abstract class LoggerStateManager {
     private static readonly state = new Map<string, Map<UUID, BaseLog>>();
-    // private static state = new Map<string, LogType<FunctionLog | ObjectLog>[]>();
-
-    public static newMap(key: string) {
-        if (!this.state.has(key))
-            this.state.set(key, new Map<UUID, BaseLog>());
-        else
-            throw new Error('Key already exists');
-    }
-
     public static setKey(key: string) {
-        if (!this.state.has(key)) { }
-        // this.state.set(key, [])
+        if (!this.state.has(key)) {
+            this.state.set(key, new Map<UUID, BaseLog>());
+        }
     }
 
     public static updateState(key: string, log: BaseLog) {
-        if (!this.state.has(key))
-            throw new Error('Key does not exist');
-        this.state.get(key)!.set(randomUUID(), log);
+        this.state.get(key)?.set(randomUUID(), log);
     }
 
     public static async getState() {
@@ -66,8 +55,12 @@ export class LoggerStateManager {
         return returningState;
     }
 
-    public static clearState() {
-        this.state.clear();
+
+    public static clearState(key?: string) {
+        if (key) {
+            this.state.delete(key);
+        } else {
+            this.state.clear();
+        }
     }
 }
-
