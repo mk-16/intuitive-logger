@@ -7,7 +7,6 @@ class TEST {
     /**
      * name
      */
-    @Logger.decorate()
     public name() {
 
     }
@@ -15,4 +14,4 @@ class TEST {
 
 const functionToTrack = (a: number, b: number) => { return a + b };
 
-functionToTrack(1, 2)
+const tracked = Logger.track(functionToTrack)

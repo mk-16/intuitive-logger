@@ -1,16 +1,41 @@
-import { BehaviorSubject, of } from "rxjs";
 import { UUID, randomUUID } from "crypto";
-import { BaseLog } from "../../models/logs/base-log/base-log.js";
+import { Subject, filter } from "rxjs";
+import { BaseLog } from "../../utils/models/logs/base-log/base-log.js";
+import { digestLog } from "../../utils/streams-operators/digest-log.js";
+import { handleDigestedLog } from "../../utils/streams-operators/handle-digested-log.js";
+import { DigestedLog, DigestorInput, LoggerState, TrackOptions } from "../../utils/types/types.js";
+
 export abstract class LoggerStateManager {
-    private static readonly state = new Map<string, Map<UUID, BaseLog>>();
-    public static setKey(key: string) {
-        if (!this.state.has(key)) {
-            this.state.set(key, new Map<UUID, BaseLog>());
+    private static readonly state: LoggerState = new Map();
+    public static readonly digestor$ = new Subject<DigestorInput>();
+    private static digestedLog(log: unknown): log is DigestedLog {
+        return log !== null;
+    }
+    static {
+        this.digestor$.pipe(
+            digestLog(this.state),
+            filter(this.digestedLog),
+            handleDigestedLog,
+        ).subscribe();
+    }
+
+    public static setContext({ trackByName, expiresAfter, logContext }: Required<TrackOptions>) {
+        if (!this.state.has(trackByName)) {
+            this.state.set(trackByName, {
+                logContext: logContext,
+                expiresAfter: expiresAfter,
+                map: new Map<UUID, BaseLog>()
+            });
         }
     }
 
-    public static updateState(key: string, log: BaseLog) {
-        this.state.get(key)?.set(randomUUID(), log);
+    public static updateState(trackedName: string, log: BaseLog) {
+        const logsMetadata = this.state.get(trackedName);
+        if (logsMetadata) {
+            const uuid = randomUUID();
+            logsMetadata.map.set(uuid, log);
+            // this.digestor$.next();
+        }
     }
 
     public static async getState() {
