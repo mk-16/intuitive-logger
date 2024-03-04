@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import { Observable, map } from "rxjs";
-import { DigestedLog, DigestorInput, LoggerState } from "../types/types.js";
+import { DigestedLog, DigestorInput, LoggerState } from "../../types/types.js";
 
 export function digestLog(state: LoggerState) {
     return (source: Observable<DigestorInput>) => source.pipe(

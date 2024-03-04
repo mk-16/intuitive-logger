@@ -1,9 +1,10 @@
-import { UUID, randomUUID } from "crypto";
+import { UUID } from "crypto";
 import { Subject, filter } from "rxjs";
 import { BaseLog } from "../../utils/models/logs/base-log/base-log.js";
-import { digestLog } from "../../utils/streams-operators/digest-log.js";
-import { handleDigestedLog } from "../../utils/streams-operators/handle-digested-log.js";
-import { DigestedLog, DigestorInput, LoggerState, TrackOptions } from "../../utils/types/types.js";
+import { FunctionLog } from "../../utils/models/logs/function-log/function-log.js";
+import { digestLog } from "../../utils/streams-operators/digest-log/digest-log.js";
+import { digestedLogHandler } from "../../utils/streams-operators/digested-log-handler/digested-log-handler.js";
+import { DigestedLog, DigestorInput, LoggerSnapshot, LoggerState, LogsFeature } from "../../utils/types/types.js";
 
 export abstract class LoggerStateManager {
     private static readonly state: LoggerState = new Map();
@@ -15,11 +16,11 @@ export abstract class LoggerStateManager {
         this.digestor$.pipe(
             digestLog(this.state),
             filter(this.digestedLog),
-            handleDigestedLog,
+            digestedLogHandler,
         ).subscribe();
     }
 
-    public static setContext({ trackByName, expiresAfter, logContext }: Required<TrackOptions>) {
+    public static addFeature({ trackByName, expiresAfter, logContext }: Required<LogsFeature>) {
         if (!this.state.has(trackByName)) {
             this.state.set(trackByName, {
                 logContext: logContext,
@@ -29,40 +30,29 @@ export abstract class LoggerStateManager {
         }
     }
 
-    public static updateState(trackedName: string, log: BaseLog) {
-        const logsMetadata = this.state.get(trackedName);
-        if (logsMetadata) {
-            const uuid = randomUUID();
-            logsMetadata.map.set(uuid, log);
-            // this.digestor$.next();
+    public static get snapshot() {
+        const output: LoggerSnapshot = {};
+        const snapshot = Object.fromEntries([...this.state.entries()]);
+        for (const feature in snapshot) {
+            for (const [metadataKey, log] of snapshot[feature].map.entries()) {
+                output[feature] = {
+                    logContext: snapshot[feature].logContext,
+                    expiresAfter: snapshot[feature].expiresAfter,
+                    map: {
+                        ...output[feature]?.map,
+                        [metadataKey]: log
+                    }
+                }
+                Object.freeze(output[feature].map);
+                Object.freeze(output[feature].map[metadataKey]);
+                Object.freeze(output[feature]);
+                if (log instanceof FunctionLog) {
+                    Object.freeze(log.inputs);
+                    Object.freeze(log.output);
+                }
+            }
         }
-    }
-
-    public static async getState() {
-        const returningStateMap = new Map<string, readonly BaseLog[]>();
-        // if (log instanceof FunctionLog && log.output instanceof Promise) {
-        //     log.output.then(fullfilledOutput => {
-        //         const endTime = performance.now();
-        //         // log.output = fullfilledOutput;
-        //         // log.executionTime = (endTime - log.date.getTime()).toFixed(4).concat(' ms')
-        //         this.updateState(log.id, log);
-        //     })
-        // }
-        for (const [stateKey, logsContainer] of this.state) {
-            const returningLogsContainer: BaseLog[] = [];
-            // for (const log of logsContainer) {
-            //     if (log instanceof FunctionLog && log.output instanceof Promise)
-            //         await log.output;
-            //     const logClone = structuredClone(log);
-            //     Object.freeze(logClone);
-            //     returningLogsContainer.push(logClone);
-            // }
-            // Object.freeze(returningLogsContainer);
-            // returningStateMap.set(stateKey, returningLogsContainer);
-        }
-        const returningState = Object.fromEntries(returningStateMap);
-        Object.freeze(returningState);
-        return returningState;
+        return output;
     }
 
     public static async getStateByUUID(uuid: string) {
@@ -81,11 +71,13 @@ export abstract class LoggerStateManager {
     }
 
 
-    public static clearState(key?: string) {
-        if (key) {
-            this.state.delete(key);
-        } else {
-            this.state.clear();
-        }
+    public static removeFeature(key: string) {
+        this.state.delete(key);
+        return this.state.size;
+    }
+
+    public static cleanse() {
+        this.state.clear();
+        return this.state.size;
     }
 }

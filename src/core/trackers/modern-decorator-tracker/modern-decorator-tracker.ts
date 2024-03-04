@@ -1,5 +1,5 @@
-import { TrackOptions } from "../../../utils/types/types.js";
+import { LogsFeature } from "../../../utils/types/types.js";
 
 export class ModernDecoratorTracker {
-    public static track(target: any, context: DecoratorContext, options?: TrackOptions) { }
+    public static track(target: any, context: DecoratorContext, options?: LogsFeature) { }
 }

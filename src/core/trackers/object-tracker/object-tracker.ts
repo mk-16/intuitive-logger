@@ -1,18 +1,17 @@
 import { randomUUID } from "crypto";
 import { LOG_LEVEL } from "../../../utils/models/enums/log-level/log-level.js";
 import { ObjectLog } from "../../../utils/models/logs/object-log/object-log.js";
-import { minutes } from "../../../utils/to-new-lib/time-units/index.js";
-import { TrackOptions } from "../../../utils/types/types.js";
+import { LogsFeature } from "../../../utils/types/types.js";
 import { LoggerStateManager } from "../../state-manager/state-manager.js";
 
 export abstract class ObjectTracker {
-    public static track(target: { [key: string | symbol | number]: any }, options?: TrackOptions) {
+    public static track(target: { [key: string | symbol | number]: any }, options?: LogsFeature) {
         const trackingOptions = options ?? {
             trackByName: randomUUID(),
             logContext: LOG_LEVEL.INFO,
-            expiresAfter: minutes(60),
+            expiresAfter: 60 * 60 * 1000,
         };
-        LoggerStateManager.setContext(trackingOptions);
+        LoggerStateManager.addFeature(trackingOptions);
 
         return new Proxy(target, {
             get(target, property) {

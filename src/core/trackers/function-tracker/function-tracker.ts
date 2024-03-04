@@ -1,10 +1,10 @@
 import { randomUUID } from "crypto";
 import { FunctionLog } from "../../../utils/models/logs/function-log/function-log.js";
 import { LoggerStateManager } from "../../state-manager/state-manager.js";
-import { TrackOptions } from "../../../utils/types/types.js";
+import { LogsFeature } from "../../../utils/types/types.js";
 
 export abstract class FunctionTracker {
-    public static track<T extends any[], K>(originalFunction: (..._: T) => K, options?: TrackOptions) {
+    public static track<T extends any[], K>(originalFunction: (..._: T) => K, options?: LogsFeature) {
         const uuid = options?.trackByName ?? originalFunction.name !== '' ? originalFunction.name : randomUUID();
         // LoggerStateManager.setKey(uuid);
         return (...args: T): K => {
