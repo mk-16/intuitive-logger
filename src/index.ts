@@ -69,35 +69,47 @@
 const obj1 = {
     l0: 0,
     nested: {
-        l1: 1,
-        nested: {
+        l1: new Map().set('l2', {
+            l3: 3,
+        }),
+        nestedl1: {
             l2: 2,
         }
     }
 }
-function traverse(target: unknown) {
-    if (typeof target !== 'object' || target === null) return target;
+function traverse(target: unknown, action: (..._: any) => any) {
+    console.log('input', target)
+    if (typeof target !== 'object' || target === null) {
+        console.log('TARGET IS NOT VALID')
+        return action(target)
+    };
 
     function recursive<T extends Object>(target: T, seed: Partial<T> = {}): any {
+        switch (true) {
+            case target instanceof Map:
+                console.log('TARGET IS A MAP')
+            // return action(target)
+            // return traverse(Object.fromEntries(target.entries()));
+        }
         for (const [key, value] of Object.entries(target)) {
-            console.log([key, value])
+            console.log('iterating', [key, value]);
             seed[key as keyof T] = value;
-            if (typeof value === 'object' && value !== null)
-                seed[key as keyof T] = traverse(value);
-            // seed[key as keyof T] = recursive(value);
-
-            // if (typeof value !== 'object')
-            //     seed[key] = value;
-            // else
-            //     seed[key] = recursive(value);
+            if (typeof value === 'object' && value !== null) {
+                console.log('GOING DOWN ONE LEVEL IN', value)
+                seed[key as keyof T] = action(value);
+            }
         }
         return seed;
     }
 
     return recursive(target);
-    // for (const [key, value] of Object.entries(target)) {
-    //     console.log({ key, value })
-    // }
 }
 
-console.log(traverse(obj1))
+console.log('traverse result', traverse(obj1, (element) => {
+    if (typeof element === 'object' && element !== null) {
+        return traverse(element, (el2) => {
+            return el2
+        });
+    }
+    return element;
+}))
