@@ -98,18 +98,57 @@ class Traversable {
     }
 
 
+    foo(steps: string[], value?: any, ref?: any): any {
+        console.log('INPUUUUUTS', { steps, value, ref });
+        while (steps.length > 0) {
+            const [type, key] = steps.pop()?.split('#') ?? [];
+            if (ref === undefined) {
+                switch (type) {
+                    case 'array':
+                        ref = [];
+                        ref.push(value);
+                        break;
+                    case 'map':
+                        ref = new Map();
+                        ref.set(key, value);
+                        break;
+                    case 'set':
+                        ref = new Set();
+                        ref.add(value);
+                        break;
+                    case 'object':
+                        ref = { [key]: value };
+                        break;
+
+                }
+                if (steps.length > 0) return this.foo(steps, undefined, ref)
+                return ref;
+                // return this.foo(steps, undefined, ref);
+            }
+
+            if (steps.length > 0) return this.foo(steps, undefined, ref)
+            return ref
+        }
+        return ref
+
+        // return { [key]: value }
+    }
+
 
     pack() {
-        // let output: any;
-        // let insertionSequence: [string, string][] = [];
-        // let previousRootKey: string;
-        function foo(steps: string[], value: any, ref?: any) {
-        }
-        let buffer = new Map();
+        let buffer: any = undefined;
         this.map.forEach((value, mappedKey) => {
-            const [_, ...compoundKey] = mappedKey.split('$');
+            const [_, ...compoundKeys] = mappedKey.split('$');
+            buffer = buffer ? { ...buffer, ...this.foo(compoundKeys, value, buffer) } : {...this.foo(compoundKeys, value, buffer)};
+            console.log({ buffer })
+            // const reduced = compoundKeys.reduce((acc: any, compoundKey, index, { length: depthLimit }) => {
+            //     const depth = index + 1;
+            //     // if()
+            //     console.log({ compoundKey, depth, depthLimit, acc })
 
-            const rootType = compoundKey[0].split('#')[0];
+            // }, {})
+            // console.log({ reduced })
+            // const rootType = compoundKey[0].split('#')[0];
             // output = { ...output, ...foo(compoundKey, value) }
             // console.log({ output: foo(compoundKey, value) });
             // switch (rootType) {
@@ -132,7 +171,7 @@ class Traversable {
 
 
 const traversable = new Traversable(mockedNestedObject);
-console.log(traversable.map);
+// console.log(traversable.map);
 // traversable.apply((value) => {
 //     // ;
 //     return value;
