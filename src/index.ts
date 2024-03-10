@@ -1,3 +1,5 @@
+import { count } from "console";
+
 const mockedNestedObject = {
     string: 'level 1',
     number: 0,
@@ -90,48 +92,56 @@ class Traversable {
 
     apply(action: (..._: any[]) => any) {
         this.map.forEach((value, key) => {
-            action(value);
-            this.map.set(key, value)// action(value);
+            // action(value);
+            this.map.set(key, action(value))// action(value);
         });
     }
 
 
 
     pack() {
-        let output = {};
-        let ref;
+        // let output: any;
+        // let insertionSequence: [string, string][] = [];
+        // let previousRootKey: string;
+        function foo(steps: string[], value: any, ref?: any) {
+        }
+        let buffer = new Map();
         this.map.forEach((value, mappedKey) => {
-            console.log(mappedKey);
-            const [_, ...compoundKey] = mappedKey.split('#');
-            console.log({ compoundKey });
-            compoundKey.forEach((key, index, { length: maxDepth }) => {
-                const currentDepth = index + 1;
-                const [] = 
-                if (currentDepth !== maxDepth) {
-                }
-                else {
-                }
-            });
-            // mappedKey.split('#').pop()?.forEach((mappedKey, index, { length: maxDepth }) => {
-            //     const currentDepth = index + 1;
-            //     if (currentDepth !== maxDepth) {
-            //         const key = mappedKey.slice(7)
-            //         console.log({ mappedKey, key, currentDepth, maxDepth })
-            //     }
-            // });
+            const [_, ...compoundKey] = mappedKey.split('$');
+
+            const rootType = compoundKey[0].split('#')[0];
+            // output = { ...output, ...foo(compoundKey, value) }
+            // console.log({ output: foo(compoundKey, value) });
+            // switch (rootType) {
+            //     case 'array':
+            //         console.log({ compoundKey, value })
+            //         output = output ? [...output, foo(compoundKey, value)] : [foo(compoundKey, value)];
+            //         break;
+            //     // case 'map':
+            //     // output = output ? [...output, foo(compoundKey, value)] : [foo(compoundKey, value)];
+            //     // case 'set':
+            //     // case 'object':
+            //     default:
+            //         // console.log({ compoundKey, value })
+            //         output = output ? { ...output, ...foo(compoundKey, value) } : { ...foo(compoundKey, value) };
+            // }
+            // console.log({ output })
         });
-        console.log(output);
     }
 }
 
 
 const traversable = new Traversable(mockedNestedObject);
-traversable.apply((value) => {
-    Object.freeze(value);
-});
+console.log(traversable.map);
+// traversable.apply((value) => {
+//     // ;
+//     return value;
+// });
+
 
 // traversable.apply((value) => {
-//     console.log(Object.isFrozen(value));
+//     console.log({ isFrozen: Object.isFrozen(value), value })
+//     return value;
 // });
 
 traversable.pack();
