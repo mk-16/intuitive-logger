@@ -1,6 +1,6 @@
 import { UUID, randomUUID } from "crypto";
 import { describe } from "mocha";
-import { of } from "rxjs";
+import { Subject, of, takeUntil } from "rxjs";
 import { LOG_LEVEL } from "../../models/enums/log-level/log-level.js";
 import { BaseLog } from "../../models/logs/base-log/base-log.js";
 import { FunctionLog } from "../../models/logs/function-log/function-log.js";
@@ -10,12 +10,13 @@ import { expect } from "expect";
 import assert from "assert";
 
 describe("DigestLog", function () {
-    it("digests logs", function () {
+    it("digests logs", function (done) {
         const mockedLoggerState: LoggerState = new Map();
         mockedLoggerState.set('mocked-feature-key', { map: new Map(), expiresAfter: 5000, logContext: LOG_LEVEL.INFO });
         const mockedLog = new FunctionLog('mock time', [], undefined);
+        const stop$ = new Subject<void>();
         of<DigestorInput>(['mocked-feature-key', mockedLog])
-            .pipe(digestLog(mockedLoggerState))
+            .pipe(digestLog(mockedLoggerState), takeUntil(stop$))
             .subscribe(digestedLog => {
                 if (digestedLog !== null) {
                     const [map, id, time] = digestedLog;
@@ -25,6 +26,8 @@ describe("DigestLog", function () {
                     expect(map.has(id)).toBeTruthy();
                     expect(map.get(id)).toEqual(mockedLog);
                 }
+                stop$.next();
+                done();
             })
 
     })

@@ -1,14 +1,14 @@
 import { UUID } from "crypto";
-import { Subject, filter } from "rxjs";
+import { Subject, filter, tap } from "rxjs";
 import { BaseLog } from "../../utils/models/logs/base-log/base-log.js";
-import { FunctionLog } from "../../utils/models/logs/function-log/function-log.js";
 import { digestLog } from "../../utils/streams-operators/digest-log/digest-log.js";
 import { digestedLogHandler } from "../../utils/streams-operators/digested-log-handler/digested-log-handler.js";
-import { DigestedLog, DigestorInput, LoggerSnapshot, LoggerState, LogsFeature } from "../../utils/types/types.js";
+import { DigestedLog, DigestorInput, FeatureSnapshot, LoggerState, LogsFeature, Snapshot } from "../../utils/types/types.js";
 
 export abstract class LoggerStateManager {
     private static readonly state: LoggerState = new Map();
     public static readonly digestor$ = new Subject<DigestorInput>();
+
     private static digestedLog(log: unknown): log is DigestedLog {
         return log !== null;
     }
@@ -31,43 +31,38 @@ export abstract class LoggerStateManager {
     }
 
     public static get snapshot() {
-        const output: LoggerSnapshot = {};
-        const snapshot = Object.fromEntries([...this.state.entries()]);
-        for (const feature in snapshot) {
-            for (const [metadataKey, log] of snapshot[feature].map.entries()) {
-                output[feature] = {
-                    logContext: snapshot[feature].logContext,
-                    expiresAfter: snapshot[feature].expiresAfter,
-                    map: {
-                        ...output[feature]?.map,
-                        [metadataKey]: log
-                    }
-                }
-                Object.freeze(output[feature].map);
-                Object.freeze(output[feature].map[metadataKey]);
-                Object.freeze(output[feature]);
-                if (log instanceof FunctionLog) {
-                    Object.freeze(log.inputs);
-                    Object.freeze(log.output);
-                }
-            }
-        }
-        return output;
+        const stateClone: Snapshot = {};
+        this.state.forEach((feature, featureKey) => {
+            stateClone[featureKey] = Object.freeze({
+                expiresAfter: feature.expiresAfter,
+                logContext: feature.logContext,
+                map: {}
+            });
+
+            feature.map.forEach((log, uuid) => {
+                stateClone[featureKey].map[uuid] = Object.freeze(Object.setPrototypeOf(structuredClone(log), log))
+            });
+
+            Object.freeze(stateClone[featureKey].map);
+        })
+
+        return Object.freeze(stateClone);
     }
 
-    public static async getStateByUUID(uuid: string) {
-        const returningStateSet = new Set<BaseLog>();
-        const logsContainer = this.state.get(uuid) ?? [];
-        // for (const log of logsContainer) {
-        //     // if (log instanceof FunctionLog && log.output instanceof Promise)
-        //     //     await log.output;
-        //     // const logClone = structuredClone(log)
-        //     // Object.freeze(logClone);
-        //     // returningStateSet.add(logClone);
-        // }
-        const returningState = [...returningStateSet.values()];
-        Object.freeze(returningState);
-        return returningState;
+    public static getFeatureSnapshot(feature: string) {
+        const requestedFeature = this.state.get(feature);
+        if (requestedFeature) {
+            const output: FeatureSnapshot = {
+                ...requestedFeature,
+                map: {}
+            }
+            requestedFeature.map.forEach((log, key) => {
+                output.map[key] = Object.freeze(Object.setPrototypeOf(structuredClone(log), log));
+            })
+
+            Object.freeze(output.map)
+            return Object.freeze(output);
+        }
     }
 
 

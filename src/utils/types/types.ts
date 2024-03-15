@@ -11,8 +11,8 @@ export interface LogsFeature extends LogsMetadata {
     trackByName: string;
 }
 
-
 export type DigestorInput = [string, BaseLog];
-export type DigestedLog = [Map<UUID, BaseLog>, UUID, number]; 
+export type DigestedLog = [Map<UUID, BaseLog>, UUID, number];
 export type LoggerState = Map<string, LogsMetadata & { map: Map<UUID, BaseLog> }>;
-export type LoggerSnapshot = { [key: string]: LogsMetadata & { map: { [key: UUID]: BaseLog } } };
+export type Snapshot = { [key: string]: LogsMetadata & { map: { [key: UUID]: BaseLog } } };
+export type FeatureSnapshot = LogsMetadata & { map: { [key: UUID]: BaseLog } };

@@ -1,9 +1,9 @@
-import { before, beforeEach } from "mocha";
+import { after, before, beforeEach } from "mocha";
 import { LoggerStateManager } from "./core/state-manager/state-manager.js";
 
-before(() => {
-    console.log('before all test files')
-})
-beforeEach(() => {
+beforeEach(function() {
+    LoggerStateManager.cleanse()
+});
+afterEach(function() {
     LoggerStateManager.cleanse()
 })
