@@ -1,14 +1,14 @@
-import { Observable, switchMap, tap, timer } from "rxjs";
+import { Observable, concatMap, tap, timer } from "rxjs";
 import { DigestedLog } from "../../types/types.js";
 
 export function digestedLogHandler(digestedLog$: Observable<DigestedLog>) {
     return digestedLog$
         .pipe(
-            switchMap(([map, uuid, timeToDigest]) =>
-                timer(timeToDigest)
+            concatMap(([logsSource, uuid, expirationTIme]) =>
+                timer(expirationTIme)
                     .pipe(
                         tap(() => {
-                            map.delete(uuid);
+                            logsSource.delete(uuid);
                         })
                     )
             )

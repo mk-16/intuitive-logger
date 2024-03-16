@@ -1,19 +1,28 @@
 import { randomUUID } from "crypto";
+import { CONTEXT } from "../../../index.js";
 import { FunctionLog } from "../../../utils/models/logs/function-log/function-log.js";
+import { FeatureMetadata, ScopeMetadata, TrackingOption } from "../../../utils/types/types.js";
 import { LoggerStateManager } from "../../state-manager/state-manager.js";
-import { LogsFeature } from "../../../utils/types/types.js";
-import { LOG_LEVEL } from "../../../index.js";
 
 export abstract class FunctionTracker {
-    public static track<T extends any[], K>(originalFunction: (..._: T) => K, options?: Partial<LogsFeature>) {
-        const trackingOptions = {
-            trackByName: randomUUID(),
-            logContext: LOG_LEVEL.INFO,
-            expiresAfter: 60 * 60 * 1000,
-            ...options
+    public static track<T extends any[], K>(originalFunction: (..._: T) => K, options?: TrackingOption) {
+        const functionName = originalFunction.name != '' ? originalFunction.name : undefined;
+        const featureMetadata: FeatureMetadata = {
+            context: options?.feature.context ?? CONTEXT.DEBUG,
+            expiresAfter: options?.feature.expiresAfter ?? 60 * 60 * 1000,
+            featureName: options?.feature.featureName ?? functionName ?? randomUUID(),
         };
 
-        LoggerStateManager.addFeature(trackingOptions);
+        const scope: ScopeMetadata = {
+            context: options?.scope?.context ?? CONTEXT.DEBUG,
+            expiresAfter: options?.scope?.expiresAfter ?? Infinity,
+            scopeName: options?.scope?.scopeName ?? 'global',
+        }
+
+
+        LoggerStateManager.addScope(scope);
+        LoggerStateManager.addFeature(featureMetadata, scope.scopeName);
+
         return (...args: T): K => {
             const startTime = performance.now();
             const originalFunctionResults = originalFunction(...args);
@@ -27,12 +36,12 @@ export abstract class FunctionTracker {
                     const executionTime = (endTime - startTime).toFixed(4).concat(' ms');
                     log.executionTime = executionTime;
                     log.output = fullfilledOutput;
-                    LoggerStateManager.digestor$.next([trackingOptions.trackByName, log]);
+                    LoggerStateManager.digestor$.next([scope.scopeName, featureMetadata.featureName, log]);
                 })
             } else {
                 const executionTime = (endTime - startTime).toFixed(4).concat(' ms');
                 const log = new FunctionLog(executionTime, args, originalFunctionResults);
-                LoggerStateManager.digestor$.next([trackingOptions.trackByName, log]);
+                LoggerStateManager.digestor$.next([scope.scopeName, featureMetadata.featureName, log]);
             }
             return originalFunctionResults;
         };

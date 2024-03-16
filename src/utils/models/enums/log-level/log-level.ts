@@ -1,4 +1,4 @@
-export enum LOG_LEVEL {
+export enum CONTEXT {
     DEBUG = 'DEBUG',
     INFO = 'INFO',
     WARN = 'WARN',

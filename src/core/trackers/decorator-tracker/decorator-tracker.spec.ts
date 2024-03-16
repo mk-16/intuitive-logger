@@ -1,5 +1,5 @@
 import { describe } from "mocha";
-import { LOG_LEVEL } from "../../../index.js";
+import { CONTEXT } from "../../../index.js";
 import assert from "assert";
 import { existsSync, fsync, readFileSync } from "fs";
 import path from "path";
@@ -8,7 +8,7 @@ import path from "path";
 
 describe("LegacyDecoratorTracker", function () {
     function Log(..._: any[]) { return (...args: any[]) => { } }
-    @Log({ expiresAfter: 2000, logContext: LOG_LEVEL.DEBUG })
+    @Log({ expiresAfter: 2000, logContext: CONTEXT.DEBUG })
     class MyCustomClass {
         @Log()
         myMethod() { }
