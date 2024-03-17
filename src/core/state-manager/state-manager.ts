@@ -40,9 +40,10 @@ export abstract class LoggerStateManager {
     }
 
     static {
+        //CHANGE GLOBAL SCOPE FOR TESTS
         this.addScope({
             context: CONTEXT.DEBUG,
-            expiresAfter: 24 * 60 * 60 * 1000,
+            expiresAfter: 1000,
             scopeName: 'global'
         });
     }
