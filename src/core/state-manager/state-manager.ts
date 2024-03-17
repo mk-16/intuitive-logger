@@ -1,5 +1,5 @@
 import { UUID } from "crypto";
-import { Subject, concatMap, filter, map, tap, timer } from "rxjs";
+import { Subject, concatMap, filter, map, takeUntil, tap, timer } from "rxjs";
 import { BaseLog } from "../../utils/models/logs/base-log/base-log.js";
 import { digestLog } from "../../utils/streams-operators/digest-log/digest-log.js";
 import { digestedLogHandler } from "../../utils/streams-operators/digested-log-handler/digested-log-handler.js";
@@ -10,7 +10,8 @@ import { CONTEXT } from "../../utils/models/enums/log-level/log-level.js";
 export abstract class LoggerStateManager {
     private static readonly state: LoggerState = new Map()
     public static readonly digestor$ = new Subject<DigestorInput>();
-    public static readonly scopeCleaner$ = new Subject<string>();
+    public static readonly resetTimer$ = new Subject<void>();
+    public static readonly scopeCleaner$ = new Subject<[string, boolean]>();
 
     private static digestedLog(log: unknown): log is DigestedLog {
         return log !== null;
@@ -24,15 +25,25 @@ export abstract class LoggerStateManager {
         ).subscribe();
     }
 
+
     static {
         this.scopeCleaner$.pipe(
-            map((scopeName): [number | undefined, string] => [this.state.get(scopeName)?.expiresAfter, scopeName]),
-            filter(([expirationTime]: [number | undefined, string]) => expirationTime !== undefined),
-            concatMap(([expirationTime, scopeName]) =>
-                timer(expirationTime!)
+            map(([scopeName, reload]): [Omit<Scope, "scopeName"> | undefined, string, boolean] => [this.state.get(scopeName), scopeName, reload]),
+            filter(([scope]: [Omit<Scope, "scopeName"> | undefined, string, boolean]) => scope !== undefined),
+            concatMap(([scope, scopeName, reload]: [Omit<Scope, "scopeName"> | undefined, string, boolean]) =>
+                timer(scope!.expiresAfter)
                     .pipe(
+                        takeUntil(this.resetTimer$),
                         tap(() => {
                             this.state.delete(scopeName);
+                            if (reload) {
+                                scope!.map.clear();
+                                this.addScope({
+                                    context: scope!.context,
+                                    expiresAfter: scope!.expiresAfter,
+                                    scopeName
+                                }, reload)
+                            }
                         })
                     )
             )
@@ -43,20 +54,31 @@ export abstract class LoggerStateManager {
         //CHANGE GLOBAL SCOPE FOR TESTS
         this.addScope({
             context: CONTEXT.DEBUG,
-            expiresAfter: 1000,
+            expiresAfter: 2000,
             scopeName: 'global'
-        });
+        }, true);
     }
 
     // static updateGlobal() { }
-    static addScope({ scopeName, context, expiresAfter }: ScopeMetadata) {
-        if (!this.state.has(scopeName)) {
+    static addScope({ scopeName, context, expiresAfter }: ScopeMetadata, reload = false, override = false) {
+
+        if (override) {
+            this.resetTimer$.next();
             this.state.set(scopeName, {
                 context,
                 expiresAfter,
                 map: new Map()
             });
-            this.scopeCleaner$.next(scopeName);
+            this.scopeCleaner$.next([scopeName, reload])
+        } else {
+            if (this.state.has(scopeName)) {
+                this.state.set(scopeName, {
+                    context,
+                    expiresAfter,
+                    map: new Map()
+                });
+                this.scopeCleaner$.next([scopeName, reload])
+            }
         }
     }
 

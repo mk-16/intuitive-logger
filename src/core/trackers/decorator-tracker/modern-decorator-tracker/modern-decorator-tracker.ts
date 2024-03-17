@@ -3,7 +3,7 @@ import { CONTEXT } from "../../../../index.js";
 import { FeatureMetadata } from "../../../../utils/types/types.js";
 
 export class ModernDecoratorTracker {
-    public static track(options: FeatureMetadata) {
+    public static decorate(options: FeatureMetadata) {
         // target: any, context: DecoratorContext, options?: LogsFeature
         // const config: LogsFeature = { expiresAfter: 30 * 1000, logContext: LOG_LEVEL.INFO, trackByName: randomUUID(), ...options };
         return ( ..._rest: any[]) => {

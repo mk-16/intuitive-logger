@@ -4,7 +4,7 @@ import { LoggerStateManager } from "../../../state-manager/state-manager.js";
 
 export abstract class LegacyDecoratorTracker {
 
-    public static track(options?: Partial<LogsMetadata>) {
+    public static decorate(options?: Partial<LogsMetadata>) {
 
         // target: any, context: DecoratorContext, options?: LogsFeature
         // const config: LogsFeature = { expiresAfter: 30*1000, logContext: LOG_LEVEL.INFO,...options };

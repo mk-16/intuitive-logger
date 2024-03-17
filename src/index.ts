@@ -1,7 +1,7 @@
 import { Logger } from './core/logger/logger.js';
-import { ConfigLogs, Log } from './core/trackers/decorator-tracker/decorator-tracker.js';
+import { ScopeConfigDecorator } from './utils/configurators/scope-config-decorator/scope-config-decorator.js';
+// import { DecoratorAdapter } from './utils/configurators/scope-configurator-decorator/scope-configurator-decorator.js';
 import { CONTEXT } from './utils/models/enums/log-level/log-level.js';
-import { FunctionLog } from './utils/models/logs/function-log/function-log.js';
 
 export type { UUID } from 'crypto';
 export { CONTEXT } from './utils/models/enums/log-level/log-level.js';
@@ -44,9 +44,37 @@ proxy.method();
 //         }
 //     })
 // })
+// LoggerConfig.globalScope = {context: CONTEXT.FATAL, expiresAfter: 500}
 setTimeout(() => {
     console.log(Logger.snapshot);
-    // setTimeout(() => {
-    //     console.log(Logger.snapshot);
-    // }, 2000);
-}, 2000);
+    setTimeout(() => {
+        console.log(Logger.snapshot);
+    }, 2000);
+}, 500);
+
+
+
+
+function ConfigLogsScope(...config: any[]) {
+    return function (..._: any) {
+        console.log({ config })
+    }
+}
+
+
+
+
+// @ConfigLogsScope({ expiresAfter: 1000, context: CONTEXT.INFO })
+// @DecoratorAdapter.decorate()
+class A {
+    // @ConfigLogsScope({ expiresAfter: 1000, context: CONTEXT.INFO })
+
+    @ScopeConfigDecorator.decorate({ context: CONTEXT.DEBUG })
+    MYmEHTOD() { }
+}
+
+
+const a = new A();
+// console.log(map)
+// DecoratorAdapter.decorate({}, 'string', {})
+

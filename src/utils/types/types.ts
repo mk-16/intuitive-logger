@@ -15,9 +15,6 @@ export interface FeatureMetadata extends LogsMetadata {
     featureName: string;
 }
 
-export interface IDecorator {
-    decorate(): any;
-}
 export type DigestorInput = [string, string, BaseLog];
 export type DigestedLog = [Map<UUID, BaseLog>, UUID, number];
 
