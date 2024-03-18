@@ -8,14 +8,16 @@ export abstract class FunctionTracker {
     public static track<T extends any[], K>(originalFunction: (..._: T) => K, options?: TrackingOption) {
         const functionName = originalFunction.name != '' ? originalFunction.name : undefined;
         const featureMetadata: FeatureMetadata = {
+            persist: options?.feature.persist ?? false,
             context: options?.feature.context ?? CONTEXT.DEBUG,
-            expiresAfter: options?.feature.expiresAfter ?? 60 * 60 * 1000,
+            expiresAfter: options?.feature.expiresAfter ?? 24 * 60 * 60 * 1000,
             featureName: options?.feature.featureName ?? functionName ?? randomUUID(),
         };
 
         const scope: ScopeMetadata = {
+            persist: options?.scope?.persist ?? false,
             context: options?.scope?.context ?? CONTEXT.DEBUG,
-            expiresAfter: options?.scope?.expiresAfter ?? Infinity,
+            expiresAfter: options?.scope?.expiresAfter ?? 24 * 60 * 60 * 1000,
             scopeName: options?.scope?.scopeName ?? 'global',
         }
 

@@ -3,7 +3,10 @@ import { LogsMetadata } from "../../types/types.js";
 import { LegacyScopeConfigDecorator } from "./legacy-scope-config-decorator/legacy-scope-config-decorator.js";
 import { ModernScopeConfigDecorator } from "./modern-scope-config-decorator/modern-scope-config-decorator.js";
 
-
+interface ConfigDecorator {
+    (options?: Partial<LogsMetadata>): ReturnType<typeof ScopeConfigDecorator.decorate>
+    new <T extends never>(options: T): T
+}
 
 abstract class ScopeConfigDecorator {
     private static _strategy: typeof ModernScopeConfigDecorator.decorate | typeof LegacyScopeConfigDecorator.decorate;
@@ -25,13 +28,6 @@ abstract class ScopeConfigDecorator {
     };
 }
 
-
-interface ConfigDecorator {
-    (options?: Partial<LogsMetadata>): ReturnType<typeof ScopeConfigDecorator.decorate>
-    new <T extends never>(options: T): T
-}
-
 const ConfigScope: ConfigDecorator = ScopeConfigDecorator.decorate as ConfigDecorator;
-
 export { ConfigScope };
 

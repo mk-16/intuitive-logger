@@ -13,14 +13,14 @@ export abstract class LegacyDecoratorTracker {
             const scopeName = target.name ?? target.constructor.name;
 
             if (!propertyKey && !descriptor) {
-                LoggerStateManager.addScope({ scopeName, context: context ?? CONTEXT.INFO, expiresAfter: expiresAfter ?? 24 * 60 * 60 * 1000 });
+                // LoggerStateManager.addScope({ scopeName, context: context ?? CONTEXT.INFO, expiresAfter: expiresAfter ?? 24 * 60 * 60 * 1000 });
             } else {
-                LoggerStateManager.addScope({ scopeName, context: CONTEXT.INFO, expiresAfter: 24 * 60 * 60 * 1000 });
+                // LoggerStateManager.addScope({ scopeName, context: CONTEXT.INFO, expiresAfter: 24 * 60 * 60 * 1000 });
             }
 
             if (propertyKey) {
                 const feature = { featureName: propertyKey, context: context ?? CONTEXT.INFO, expiresAfter: expiresAfter ?? 24 * 60 * 60 * 1000 };
-                LoggerStateManager.addFeature(feature, scopeName);
+                // LoggerStateManager.addFeature(feature, scopeName);
             }
 
             console.log({ snapshot: LoggerStateManager.snapshot['Myclass'].map });

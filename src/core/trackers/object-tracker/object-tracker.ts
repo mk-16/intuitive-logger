@@ -8,14 +8,16 @@ import { FunctionTracker } from "../function-tracker/function-tracker.js";
 export abstract class ObjectTracker {
     public static track<T extends {}>(target: T, options?: TrackingOption) {
         const scope: ScopeMetadata = {
+            persist: options?.scope?.persist ?? false,
             context: options?.scope?.context ?? CONTEXT.DEBUG,
-            expiresAfter: options?.scope?.expiresAfter ?? Infinity,
+            expiresAfter: options?.scope?.expiresAfter ?? 24 * 60 * 60 * 1000,
             scopeName: options?.scope?.scopeName ?? 'global',
         };
 
         const featureMetadata: FeatureMetadata = {
+            persist: options?.feature.persist ?? false,
             context: options?.feature.context ?? CONTEXT.DEBUG,
-            expiresAfter: options?.feature.expiresAfter ?? 60 * 60 * 1000,
+            expiresAfter: options?.feature.expiresAfter ?? 24 * 60 * 60 * 1000,
             featureName: options?.feature.featureName ?? randomUUID(),
         };
 

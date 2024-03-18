@@ -7,6 +7,10 @@ import { DigestedLog, DigestorInput, FeatureMetadata, FeatureSnapshot, LoggerSta
 import { CONTEXT } from "../../utils/models/enums/log-level/log-level.js";
 
 
+export class Digestor {
+    digestor(state: LoggerState) { }
+}
+
 export abstract class LoggerStateManager {
     private static readonly state: LoggerState = new Map()
     public static readonly digestor$ = new Subject<DigestorInput>();
@@ -39,6 +43,7 @@ export abstract class LoggerStateManager {
                             if (reload) {
                                 scope!.map.clear();
                                 this.addScope({
+                                    persist: scope!.persist,
                                     context: scope!.context,
                                     expiresAfter: scope!.expiresAfter,
                                     scopeName
@@ -52,41 +57,42 @@ export abstract class LoggerStateManager {
 
     static {
         //CHANGE GLOBAL SCOPE FOR TESTS
-        this.addScope({
-            context: CONTEXT.DEBUG,
-            expiresAfter: 2000,
-            scopeName: 'global'
-        }, true);
+        // this.addScope({
+        //     context: CONTEXT.DEBUG,
+        //     expiresAfter: 2000,
+        //     scopeName: 'global'
+        // }, true);
     }
 
     // static updateGlobal() { }
     static addScope({ scopeName, context, expiresAfter }: ScopeMetadata, reload = false, override = false) {
-
-        if (override) {
-            this.resetTimer$.next();
-            this.state.set(scopeName, {
-                context,
-                expiresAfter,
-                map: new Map()
-            });
-            this.scopeCleaner$.next([scopeName, reload])
-        } else {
-            if (this.state.has(scopeName)) {
-                this.state.set(scopeName, {
-                    context,
-                    expiresAfter,
-                    map: new Map()
-                });
-                this.scopeCleaner$.next([scopeName, reload])
-            }
-        }
+        // console.log({ scopeName, context, expiresAfter, reload, override })
+        // if (override) {
+        //     this.resetTimer$.next();
+        //     this.state.set(scopeName, {
+        //         context,
+        //         expiresAfter,
+        //         map: new Map()
+        //     });
+        //     this.scopeCleaner$.next([scopeName, reload])
+        // } else {
+        //     if (!this.state.has(scopeName)) {
+        //         this.state.set(scopeName, {
+        //             context,
+        //             expiresAfter,
+        //             map: new Map()
+        //         });
+        //         this.scopeCleaner$.next([scopeName, reload])
+        //     }
+        // }
     }
 
-    public static addFeature({ featureName, context, expiresAfter }: FeatureMetadata, scope: string) {
+    public static addFeature({ persist, featureName, context, expiresAfter }: FeatureMetadata, scope: string) {
         const featuresMap = this.state.get(scope)?.map;
         if (featuresMap) {
             if (!featuresMap.has(featureName)) {
                 featuresMap.set(featureName, {
+                    persist,
                     context,
                     expiresAfter,
                     map: new Map<UUID, BaseLog>()
@@ -95,19 +101,20 @@ export abstract class LoggerStateManager {
         }
     }
 
-    public static asd<T>(targetMap: T, map: Map<string, any>) {
-        map.forEach((value, key) => {
-            Object.defineProperty(targetMap, key, {
-                configurable: false,
-                enumerable: true,
-                value: Object.freeze(Object.setPrototypeOf(structuredClone(value), value)),
-                writable: false
-            })
-        })
-    }
+    // public static asd<T>(targetMap: T, map: Map<string, any>) {
+    //     map.forEach((value, key) => {
+    //         Object.defineProperty(targetMap, key, {
+    //             configurable: false,
+    //             enumerable: true,
+    //             value: Object.freeze(Object.setPrototypeOf(structuredClone(value), value)),
+    //             writable: false
+    //         })
+    //     })
+    // }
 
     public static get snapshot() {
         const stateClone: Snapshot = {};
+        console.log({ state: this.state })
         this.state.forEach((scope, scopeKey) => {
             stateClone[scopeKey] = {
                 ...scope,

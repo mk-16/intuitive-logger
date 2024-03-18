@@ -27,16 +27,16 @@ export type { FeatureSnapshot, Snapshot } from './utils/types/types.js';
 // myInstance.myMethod();
 // myInstance.myMethod();
 // LoggerConfiguration.globalScope = { context: CONTEXT.INFO, expiresAfter: 5000 };
-const trackedFunction = Logger.track(function (a: number, b: number) { return a + b }, { feature: { expiresAfter: 100, context: CONTEXT.INFO, featureName: 'aaaa' } });
+// const trackedFunction = Logger.track(function (a: number, b: number) { return a + b }, { feature: { expiresAfter: 100, context: CONTEXT.INFO, featureName: 'aaaa' } });
 const proxy = Logger.track({ hello: 'world', method: function () { } }, { feature: { expiresAfter: 100 } });
-trackedFunction(1, 2);
-trackedFunction(2, 3);
+// trackedFunction(1, 2);
+// trackedFunction(2, 3);
 proxy.hello = 'world2';
 proxy.hello = 'world3';
 proxy.method();
-proxy.method();
-proxy.method();
-proxy.method();
+// proxy.method();
+// proxy.method();
+// proxy.method();
 // Object.values(Logger.snapshot['global'].map).forEach(feature => {
 //     Object.values(feature.map).forEach(log => {
 //         if (log instanceof FunctionLog) { 

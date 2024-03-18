@@ -5,6 +5,7 @@ import { BaseLog } from "../models/logs/base-log/base-log.js";
 export interface LogsMetadata {
     context: CONTEXT;
     expiresAfter: number;
+    persist: boolean;
 }
 
 export interface ScopeMetadata extends LogsMetadata {
@@ -17,14 +18,6 @@ export interface FeatureMetadata extends LogsMetadata {
 
 export type DigestorInput = [string, string, BaseLog];
 export type DigestedLog = [Map<UUID, BaseLog>, UUID, number];
-// export interface Decorator<T, K> {
-//     (args?: infer T ? T : never): K;
-//     new(): never
-// }
-
-// type Arguments<Type, K> = Type extends Array<infer Argument> ? Argument : never;
-// export type Constructor<Function> = Function extends <Args extends any[]>(...args: Args) => infer Ctor;
-// export type LegacyClassDecorator = <>(target: Constructor<unknown, u>) => T | void
 
 export type BaseLogMap = Map<UUID, BaseLog>;
 export interface Feature extends Omit<FeatureMetadata, 'featureName'> {

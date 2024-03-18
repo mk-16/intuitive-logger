@@ -8,7 +8,7 @@ export abstract class Logger {
     public static get snapshot() {
         return LoggerStateManager.snapshot;
     }
-    
+
     public static getFeatureSnapshot(feature: string) {
         return LoggerStateManager.getFeatureSnapshot(feature);
     }
