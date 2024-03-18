@@ -17,7 +17,10 @@ export interface FeatureMetadata extends LogsMetadata {
 
 export type DigestorInput = [string, string, BaseLog];
 export type DigestedLog = [Map<UUID, BaseLog>, UUID, number];
-
+export interface Decorator<T, K> {
+    (args?: T): K;
+    new(): never
+}
 export type BaseLogMap = Map<UUID, BaseLog>;
 export interface Feature extends Omit<FeatureMetadata, 'featureName'> {
     map: BaseLogMap;

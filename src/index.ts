@@ -1,5 +1,5 @@
 import { Logger } from './core/logger/logger.js';
-import { ScopeConfigDecorator } from './utils/configurators/scope-config-decorator/scope-config-decorator.js';
+import { ConfigScope } from './utils/configurators/scope-config-decorator/scope-config-decorator.js';
 // import { DecoratorAdapter } from './utils/configurators/scope-configurator-decorator/scope-configurator-decorator.js';
 import { CONTEXT } from './utils/models/enums/log-level/log-level.js';
 
@@ -55,21 +55,11 @@ setTimeout(() => {
 
 
 
-function ConfigLogsScope(...config: any[]) {
-    return function (..._: any) {
-        console.log({ config })
-    }
-}
-
-
-
-
 // @ConfigLogsScope({ expiresAfter: 1000, context: CONTEXT.INFO })
 // @DecoratorAdapter.decorate()
+@ConfigScope()
 class A {
     // @ConfigLogsScope({ expiresAfter: 1000, context: CONTEXT.INFO })
-
-    @ScopeConfigDecorator.decorate({ context: CONTEXT.DEBUG })
     MYmEHTOD() { }
 }
 

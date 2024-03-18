@@ -1,16 +1,13 @@
+import { CONTEXT } from "../../../../index.js";
 import { LogsMetadata } from "../../../types/types.js";
 
 export abstract class ModernScopeConfigDecorator {
-    static decorate(options: Partial<LogsMetadata>): any {
-
-        // return function <This, Args extends any[], Return, Fn extends (this: This, ...args: Args) => Return>
-        //     (this: This, target: Fn, context: DecoratorContext) {
-        //     console.log({ target, context })
-        // }
-
-        return function <This, Args extends any[], Return, Fn extends (this: This, ...args: Args) => Return>
-            (target: Fn, context: DecoratorContext) {
+    static decorate(options?: Partial<LogsMetadata>) {
+        return function <T>
+            (target: T, context: ClassDecoratorContext) {
             console.log({ target, context })
+            const scopeContext = options?.context ?? CONTEXT.INFO;
+            const scopeExpTime = options?.expiresAfter ?? 24 * 60 * 60 * 1000
         }
     }
 }

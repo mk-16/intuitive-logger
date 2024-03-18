@@ -1,5 +1,5 @@
 import { InfererDecorator } from "../../../utils/inferer-decorator/inferer-decorator.js";
-import { LogsMetadata } from "../../../utils/types/types.js";
+import { Decorator, LogsMetadata } from "../../../utils/types/types.js";
 import { LegacyDecoratorTracker } from "./legacy-decorator-tracker/legacy-decorator-tracker.js";
 import { ModernDecoratorTracker } from "./modern-decorator-tracker/modern-decorator-tracker.js";
 
@@ -24,11 +24,6 @@ abstract class DecoratorTracker {
 
 }
 
-interface Loggable {
-    new(_?: Partial<LogsMetadata>): void
-    (_?: Partial<LogsMetadata>): any
-}
-
-export const Log = DecoratorTracker.decorate as Loggable;
+export const Log = DecoratorTracker.decorate;
 
 
