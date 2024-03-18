@@ -1,5 +1,4 @@
 import { InfererDecorator } from "../../../utils/inferer-decorator/inferer-decorator.js";
-import { Decorator, LogsMetadata } from "../../../utils/types/types.js";
 import { LegacyDecoratorTracker } from "./legacy-decorator-tracker/legacy-decorator-tracker.js";
 import { ModernDecoratorTracker } from "./modern-decorator-tracker/modern-decorator-tracker.js";
 

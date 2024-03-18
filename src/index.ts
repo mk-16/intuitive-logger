@@ -64,7 +64,10 @@ class A {
 }
 
 
-const a = new A();
+// const a = new A();
 // console.log(map)
 // DecoratorAdapter.decorate({}, 'string', {})
 
+
+
+const a = [1, 2, 3,]

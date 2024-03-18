@@ -4,8 +4,9 @@ import { LegacyScopeConfigDecorator } from "./legacy-scope-config-decorator/lega
 import { ModernScopeConfigDecorator } from "./modern-scope-config-decorator/modern-scope-config-decorator.js";
 
 
+
 abstract class ScopeConfigDecorator {
-    private static _strategy: (options?: LogsMetadata) => (...args: any[]) => any;
+    private static _strategy: typeof ModernScopeConfigDecorator.decorate | typeof LegacyScopeConfigDecorator.decorate;
     static {
         const _ref = { flag: false };
         @InfererDecorator(_ref)
@@ -25,17 +26,12 @@ abstract class ScopeConfigDecorator {
 }
 
 
-type Dec<T> = T extends ClassDecoratorContext ?
-    <K>(target: K, context: T) => K :
-    (target: T) => T
-
-interface ConfigDecorator<K> {
-    <T>(options?: LogsMetadata): Dec<T>
+interface ConfigDecorator {
+    (options?: Partial<LogsMetadata>): ReturnType<typeof ScopeConfigDecorator.decorate>
     new <T extends never>(options: T): T
 }
 
-const ConfigScope: ConfigDecorator<typeof ScopeConfigDecorator.decorate> =
-    ScopeConfigDecorator.decorate as ConfigDecorator<any>;
+const ConfigScope: ConfigDecorator = ScopeConfigDecorator.decorate as ConfigDecorator;
 
 export { ConfigScope };
 
