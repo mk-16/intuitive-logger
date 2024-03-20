@@ -4,14 +4,11 @@ import { DigestedLog, DigestorInput, LoggerState } from "../../types/types.js";
 
 export function digestLog(state: LoggerState) {
     return (source: Observable<DigestorInput>) => source.pipe(
-        map(([scopeName, trackedName, log]): DigestedLog | null => {
-            const { map: featureMap, expiresAfter } = state.get(scopeName)?.map.get(trackedName) ?? {};
+        map(([scopeName, featureName, log]): DigestedLog => {
+            const feature = state.get(scopeName)!.get(featureName)!;
             const uuid = randomUUID();
-            if (featureMap && expiresAfter) {
-                featureMap.set(uuid, log);
-                return [featureMap, uuid, expiresAfter]
-            }
-            return null;
+            feature.logsMap.set(uuid, log);
+            return [uuid, feature]
         })
     );
 }

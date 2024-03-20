@@ -1,5 +1,4 @@
 import { randomUUID } from "crypto";
-import { CONTEXT } from "../../../../index.js";
 import { FeatureMetadata } from "../../../../utils/types/types.js";
 
 export class ModernDecoratorTracker {
