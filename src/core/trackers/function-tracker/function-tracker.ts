@@ -6,21 +6,20 @@ import { FeatureMetadata, TrackingOption } from "../../../utils/types/types.js";
 import { LoggerStateManager } from "../../state-manager/state-manager.js";
 
 export abstract class FunctionTracker {
-    static worker: Worker | typeof import('node:worker_threads').Worker;
-    static childNode: MessagePort | typeof import('node:worker_threads').MessagePort;
 
     public static track<T extends any[], K>(originalFunction: (..._: T) => K, options?: TrackingOption) {
         const functionName = originalFunction.name != '' ? originalFunction.name : undefined;
-        // const featureMetadata: FeatureMetadata = {
-        //     expiresAfter: options?.expiresAfter ?? 24 * 60 * 60 * 1000,
-        //     featureName: options?.featureName ?? functionName ?? randomUUID(),
-        //     relatedTo: options?.relatedTo ?? 'global'
-        // };
+        const featureMetadata: FeatureMetadata = {
+            expiresAfter: options?.expiresAfter ?? 24 * 60 * 60 * 1000,
+            featureName: options?.featureName ?? functionName ?? randomUUID(),
+            relatedTo: options?.relatedTo ?? 'global'
+        };
 
-        // LoggerStateManager.addFeature(featureMetadata);
+        LoggerStateManager.addFeature(featureMetadata);
 
         return (...args: T): K => {
             const startTime = performance.now();
+
             const originalFunctionResults = originalFunction(...args);
             const endTime = performance.now();
             if (originalFunctionResults instanceof Promise) {
@@ -32,12 +31,12 @@ export abstract class FunctionTracker {
                     const executionTime = (endTime - startTime).toFixed(4).concat(' ms');
                     log.executionTime = executionTime;
                     log.output = fullfilledOutput;
-                    // LoggerStateManager.digestor$.next([featureMetadata.relatedTo, featureMetadata.featureName, log]);
+                    LoggerStateManager.digestor$.next([featureMetadata.relatedTo, featureMetadata.featureName, log]);
                 })
             } else {
                 const executionTime = (endTime - startTime).toFixed(4).concat(' ms');
                 const log = new FunctionLog(executionTime, args, originalFunctionResults);
-                // LoggerStateManager.digestor$.next([featureMetadata.relatedTo, featureMetadata.featureName, log]);
+                LoggerStateManager.digestor$.next([featureMetadata.relatedTo, featureMetadata.featureName, log]);
             }
             return originalFunctionResults;
         };

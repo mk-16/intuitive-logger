@@ -30,7 +30,7 @@ export abstract class LoggerStateManager {
     }
 
     //TODO: ADD CONTEXT CONDITIONS ADD THIS TO WORKER
-    public static addFeature(featureMetadata: FeatureMetadata) {
+    public static async addFeature(featureMetadata: FeatureMetadata) {
         const featuresMap = this.state.get(featureMetadata.relatedTo);
 
         const feature: Feature = {

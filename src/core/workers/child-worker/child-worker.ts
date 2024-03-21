@@ -1,8 +1,9 @@
-import { Subject } from 'rxjs';
+import { Subject, fromEvent, map, partition, tap } from 'rxjs';
 import { isNode } from '../../../utils/is-node/is-node.js';
 import { ACTIONS } from '../../../utils/models/enums/worker/worker-actions.js';
-import { LoggerStateManager } from '../../state-manager/state-manager.js';
 import { FeatureMetadata, TrackingOption } from '../../../utils/types/types.js';
+import { LoggerStateManager } from '../../state-manager/state-manager.js';
+import { Logger } from '../../logger/logger.js';
 
 export class ChildtWorker {
     private static worker$ = new Subject<any>();
@@ -13,17 +14,28 @@ export class ChildtWorker {
             import('node:worker_threads').then(module => {
                 const { parentPort, isMainThread } = module;
                 if (!isMainThread) {
-                    // LoggerStateManager.state.set('1', new Map())
-
-                    console.log('i was called')
-                    parentPort?.on("message", ([action, data]) => {
-                        switch (action) {
-                            case ACTIONS.ADD_FEATURE:
-                                this.addFeature(data)
-                                console.log(LoggerStateManager.state)
-                                break;
+                    const [addFeature$, stream$] = partition(fromEvent(parentPort!, 'message'), (event: any) => event.data[0] === ACTIONS.ADD_FEATURE)
+                    stream$.pipe(map((event: any) => event?.data)).subscribe((data: any) => {
+                        if (data[0] == 'log') {
+                            parentPort?.postMessage(Logger.snapshot)
                         }
                     })
+                    addFeature$.pipe(map((event: any) => event?.data[1])).subscribe((data: any) => {
+                        ChildtWorker.addFeature(data)
+                    })
+                    parentPort?.on("message", function (message) {
+                        const [action, data] = message;
+                        // console.log({ action, data })
+                    })//     switch (action) {
+                    //         case ACTIONS.ADD_FEATURE:
+                    //             ChildtWorker.addFeature(data)
+                    //             // console.log(LoggerStateManager.state)
+                    //             break;
+                    //         case "log":
+                    //             console.log(LoggerStateManager.state)
+                    //             break;
+                    //     }
+                    // })
 
                     this.worker$.subscribe(([kind, request]) => {
                         //TODO PASS CONFIG env 
