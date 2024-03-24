@@ -8,52 +8,42 @@ import { Logger } from "./core/logger/logger.js";
 import { LoggerStateManager } from "./core/state-manager/state-manager.js";
 import { ParentWorker } from "./core/workers/parent-worker/parent-worker.js";
 import { ACTIONS } from "./utils/models/enums/worker/worker-actions.js";
-setTimeout(() => {
-    // const target = Math.pow(14, 6);
-    const target = Math.pow(10, 6);
-    // console.log({ target })
-    let start = Date.now()
-    for (let count = 0; count < target; count++) {
-        LoggerStateManager.addFeature({ featureName: count.toString(), 'relatedTo': 'global', 'expiresAfter': 10 * 60 * 1000 })
-    }
-    let end = Date.now()
-    console.log({ insert: ((end - start)).toString() + ' ms' })
 
-    start = Date.now()
-    Object.keys(Logger.snapshot['global']).length
-    end = Date.now()
-    console.log({ executionTimeMain: ((end - start)).toString() + ' ms' })
-    LoggerStateManager.state.clear()
-
-    start = Date.now() //- end
-    for (let count = 0; count < target; count++) {
-        // ParentWorker.addFeature({ featureName: count.toString() })
-         // ParentWorker.worker$.next([ACTIONS.ADD_FEATURE, { featureName: count.toString() }])
-        ParentWorker.worker.postMessage([ACTIONS.ADD_FEATURE, { featureName: count.toString() }])
-        //.next([ACTIONS.ADD_FEATURE, { featureName: count.toString() }])
-    }
-    end = Date.now() //- end;
-    console.log({ insertion: ((end - start)).toString() + ' ms' })
-
-    ParentWorker.actions$.subscribe(e => {
-        Object.keys(e['global']).length
-        end = Date.now() //- end;
-        console.log({ executionTimeFromThread: ((end - start)).toString() + ' ms' })
-    })
-    start = Date.now() //- end
-    ParentWorker.log()
-    // ParentWorker.addFeature({ featureName: 'some' })
-    // ParentWorker.handleFunctionLog({ startTime: 0, endTime: 1, output: 2, inputs: [1, 2] })
-    // ParentWorker.handleObjectLog({ property: 'prop', oldVal: 0, newVal: 1 })
-    // console.log(LoggerStateManager.state)
-
-}, 0);
 // export type { UUID } from 'crypto';
 // export { LOG_LEVEL } from './utils/models/enums/log-level/log-level.js';
 // // export { Logger } from "./core/logger/logger.js";
 // export { FunctionLog } from "./utils/models/logs/function-log/function-log.js";
 // export { ObjectLog } from './utils/models/logs/object-log/object-log.js';
 // export type { FeatureSnapshot, Snapshot } from './utils/types/types.js';
+let start = performance.now();
+const t = Logger.track(async function t() {
+}, { expiresAfter: 1000 })
+let end = performance.now();
+console.log((end - start).toFixed(2) + ' ms', Object.keys(Logger.snapshot['global']).length, 'FIRST')
+start = performance.now();
+setTimeout(() => {
+    end = performance.now();
+    console.log((end - start).toFixed(2) + ' ms', Object.keys(Logger.snapshot['global']['t'].logsMap).length, 'THIRD')
+}, 0);
+start = performance.now();
+for (let i = 0; i < Math.pow(10, 6); i++) {
+    t()
+}
+end = performance.now();
+console.log('insertion', (end - start).toFixed(2) + ' ms')
+start = performance.now();
+setTimeout(() => {
+    end = performance.now();
+    console.log((end - start).toFixed(2) + ' ms', Object.keys(Logger.snapshot['global']['t'].logsMap).length)
+}, 10);
+end = performance.now();
+console.log((end - start).toFixed(2) + ' ms', Object.keys(Logger.snapshot['global']).length, 'SECOND')
+start = performance.now();
+
+
+// setTimeout(() => {
+//     console.log(Logger.snapshot)
+// }, 102);
 
 
 // if (window) {

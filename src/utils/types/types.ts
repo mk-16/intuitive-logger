@@ -48,4 +48,5 @@ export interface Snapshot {
     [key: string]: ScopeSnapshot
 };
 
-export type TrackingOption = PartialKeys<FeatureMetadata, 'expiresAfter' | 'relatedTo'>;
+// export type TrackingOption = PartialKeys<FeatureMetadata, 'expiresAfter' | 'relatedTo'>;
+export type TrackingOption = Partial<FeatureMetadata>;

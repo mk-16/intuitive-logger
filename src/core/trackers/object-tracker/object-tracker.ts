@@ -31,7 +31,8 @@ export abstract class ObjectTracker {
             set<K extends keyof T & string, G extends keyof T & symbol>(target: T, property: K | G, newValue: any) {
                 const oldVal = target[property];
                 target[property] = newValue;
-                const log = new ObjectLog(property, oldVal, newValue);
+                const trace = new Error().stack?.split('\n')[1].trim().slice(3) ?? 'untraceable';
+                const log = new ObjectLog(property, oldVal, newValue, trace);
                 // LoggerStateManager.digestor$.next([scope.scopeName, featureMetadata.featureName, log]);
                 return true;
             },

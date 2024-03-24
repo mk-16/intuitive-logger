@@ -1,5 +1,5 @@
 export enum ACTIONS { 
     ADD_FEATURE = 'add-feature',
-    ADD_FUNCTION_LOG = 'add-function-log',
-    ADD_OBJECT_LOG = 'add-object-log'
+    GENERATE_FUNCTION_LOG = 'generate-function-log',
+    GENERATE_OBJECT_LOG = 'generate-object-log'
 }

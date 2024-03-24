@@ -4,7 +4,8 @@ export class FunctionLog extends BaseLog {
     constructor(
         public executionTime: string,
         public readonly inputs: any[],
-        public output: any) {
-        super();
+        public output: any,
+        trace: string) {
+        super(trace);
     }
 }
