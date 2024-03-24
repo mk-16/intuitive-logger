@@ -10,38 +10,38 @@ import { ParentWorker } from "./core/workers/parent-worker/parent-worker.js";
 import { ACTIONS } from "./utils/models/enums/worker/worker-actions.js";
 setTimeout(() => {
     // const target = Math.pow(14, 6);
-    const target = Math.pow(10, 6);
-    // console.log({ target })
+    const target = Math.pow(14, 6);
+    ParentWorker.actions$.subscribe(e => {
+        Object.keys(e['global']).length
+        end = Date.now() //- end;
+        console.log({ printing_child: ((end - start)).toString() + ' ms' })
+    });
+
     let start = Date.now()
     for (let count = 0; count < target; count++) {
         LoggerStateManager.addFeature({ featureName: count.toString(), 'relatedTo': 'global', 'expiresAfter': 10 * 60 * 1000 })
+        ParentWorker.addFeature({ featureName: count.toString() })
     }
     let end = Date.now()
-    console.log({ insert: ((end - start)).toString() + ' ms' })
+
+    console.log({ insertion_time: ((end - start)).toString() + ' ms' })
 
     start = Date.now()
     Object.keys(Logger.snapshot['global']).length
     end = Date.now()
-    console.log({ executionTimeMain: ((end - start)).toString() + ' ms' })
-    LoggerStateManager.state.clear()
+    console.log({ printing_main: ((end - start)).toString() + ' ms' })
 
-    start = Date.now() //- end
-    for (let count = 0; count < target; count++) {
-        // ParentWorker.addFeature({ featureName: count.toString() })
-         // ParentWorker.worker$.next([ACTIONS.ADD_FEATURE, { featureName: count.toString() }])
-        ParentWorker.worker.postMessage([ACTIONS.ADD_FEATURE, { featureName: count.toString() }])
-        //.next([ACTIONS.ADD_FEATURE, { featureName: count.toString() }])
-    }
-    end = Date.now() //- end;
-    console.log({ insertion: ((end - start)).toString() + ' ms' })
-
-    ParentWorker.actions$.subscribe(e => {
-        Object.keys(e['global']).length
-        end = Date.now() //- end;
-        console.log({ executionTimeFromThread: ((end - start)).toString() + ' ms' })
-    })
-    start = Date.now() //- end
+    console.log("requesting")
+    start = Date.now()
     ParentWorker.log()
+
+    // start = Date.now() //- end
+    // for (let count = 0; count < target; count++) {
+    //     // ParentWorker.addFeature({ featureName: count.toString() })
+    //      // ParentWorker.worker$.next([ACTIONS.ADD_FEATURE, { featureName: count.toString() }])
+    //     //.next([ACTIONS.ADD_FEATURE, { featureName: count.toString() }])
+    // }
+
     // ParentWorker.addFeature({ featureName: 'some' })
     // ParentWorker.handleFunctionLog({ startTime: 0, endTime: 1, output: 2, inputs: [1, 2] })
     // ParentWorker.handleObjectLog({ property: 'prop', oldVal: 0, newVal: 1 })

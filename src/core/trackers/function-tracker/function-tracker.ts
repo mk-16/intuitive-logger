@@ -19,7 +19,7 @@ export abstract class FunctionTracker {
 
         return (...args: T): K => {
             const startTime = performance.now();
-
+            
             const originalFunctionResults = originalFunction(...args);
             const endTime = performance.now();
             if (originalFunctionResults instanceof Promise) {

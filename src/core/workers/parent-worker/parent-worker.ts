@@ -1,8 +1,10 @@
-import { Subject } from 'rxjs';
+import { Subject, bufferCount } from 'rxjs';
 import { isNode } from '../../../utils/is-node/is-node.js';
 import { ACTIONS } from '../../../utils/models/enums/worker/worker-actions.js';
 import { TrackingOption } from '../../../utils/types/types.js';
-import { ChildtWorker } from '../child-worker/child-worker.js';
+import { ChildWorker } from '../child-worker/child-worker.js';
+import { Logger } from '../../logger/logger.js';
+import { LoggerStateManager } from '../../state-manager/state-manager.js';
 
 export class ParentWorker {
     static worker$ = new Subject<any>();
@@ -15,13 +17,13 @@ export class ParentWorker {
             import('node:worker_threads').then(module => {
                 const { Worker, parentPort, isMainThread } = module;
                 if (isMainThread) {
-                    const worker = new Worker(ChildtWorker.url);
+                    const worker = new Worker(ChildWorker.url, { workerData: LoggerStateManager.state });
                     this.worker = worker;
                     this.worker$.subscribe((message) => {
                         worker.postMessage(message);
                     })
+                    let str: string = '';
                     worker.on('message', (message) => {
-                        this.actions$.next(message)
                     })
                 }
             })
@@ -29,7 +31,9 @@ export class ParentWorker {
     }
 
     public static addFeature(options: TrackingOption) {
-        this.worker$.next([ACTIONS.ADD_FEATURE, options])
+        // this.worker$.next([ACTIONS.ADD_FEATURE, options])
+        // this.worker$.next([ACTIONS.ADD_FEATURE, options])
+        this.worker.postMessage([ACTIONS.ADD_FEATURE, options])
     }
     public static handleFunctionLog({ startTime, endTime, output, inputs }: any) {
         this.worker$.next([ACTIONS.ADD_FUNCTION_LOG, { startTime, endTime, output, inputs }])
