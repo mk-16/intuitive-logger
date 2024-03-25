@@ -1,5 +1,7 @@
 import { UUID } from "crypto";
 import { BaseLog } from "../models/logs/base-log/base-log.js";
+import { FunctionLog } from "../models/logs/function-log/function-log.js";
+import { ObjectLog } from "../models/logs/object-log/object-log.js";
 
 export type BaseContextType<T extends readonly any[]> =
     T extends [infer I, ...infer R] ?
@@ -7,7 +9,6 @@ export type BaseContextType<T extends readonly any[]> =
 export type KeysFromObject<T extends {}> = T extends { [P in infer K]: any } ? K : never;
 export type PartialKeys<Target, Key extends keyof Target> = Omit<Target, Key> & Partial<Pick<Target, Key>>
 export interface Context {
-    
     trace?: ((trace: string) => boolean) | boolean;
     date?: ((date: string) => boolean) | boolean;
     inputs?: ((...inputs: any[]) => boolean) | boolean;
@@ -48,4 +49,4 @@ export interface Snapshot {
     [key: string]: ScopeSnapshot
 };
 
-export type TrackingOption = PartialKeys<FeatureMetadata, 'expiresAfter' | 'relatedTo'>;
+export type TrackingOption = Partial<FeatureMetadata>;

@@ -4,37 +4,21 @@
 // // import { DecoratorAdapter } from './utils/configurators/scope-configurator-decorator/scope-configurator-decorator.js';
 
 // import { FunctionTracker } from "./core/trackers/function-tracker/function-tracker.js";
+import 'source-map-support/register.js';
 import { Logger } from "./core/logger/logger.js";
-import { LoggerStateManager } from "./core/state-manager/state-manager.js";
-import { ParentWorker } from "./core/workers/parent-worker/parent-worker.js";
-import { ACTIONS } from "./utils/models/enums/worker/worker-actions.js";
+const a = Logger.track((a: number, b: number) => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(a + b)
+        }, 1000);
+    })
+}, { expiresAfter: 3000, featureName: 'a' })
+const b = Logger.track(function (a: number, b: number) { a * b }, { expiresAfter: 6000})
+b(1, 2)
+a(3, 4)
 setTimeout(() => {
+    // const b = Logger.track(function () { })
     // const target = Math.pow(14, 6);
-    const target = Math.pow(14, 6);
-    ParentWorker.actions$.subscribe(e => {
-        Object.keys(e['global']).length
-        end = Date.now() //- end;
-        console.log({ printing_child: ((end - start)).toString() + ' ms' })
-    });
-
-    let start = Date.now()
-    for (let count = 0; count < target; count++) {
-        LoggerStateManager.addFeature({ featureName: count.toString(), 'relatedTo': 'global', 'expiresAfter': 10 * 60 * 1000 })
-        ParentWorker.addFeature({ featureName: count.toString() })
-    }
-    let end = Date.now()
-
-    console.log({ insertion_time: ((end - start)).toString() + ' ms' })
-
-    start = Date.now()
-    Object.keys(Logger.snapshot['global']).length
-    end = Date.now()
-    console.log({ printing_main: ((end - start)).toString() + ' ms' })
-
-    console.log("requesting")
-    start = Date.now()
-    ParentWorker.log()
-
     // start = Date.now() //- end
     // for (let count = 0; count < target; count++) {
     //     // ParentWorker.addFeature({ featureName: count.toString() })

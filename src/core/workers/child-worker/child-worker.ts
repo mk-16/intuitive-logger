@@ -4,6 +4,9 @@ import { ACTIONS } from '../../../utils/models/enums/worker/worker-actions.js';
 import { FeatureMetadata, TrackingOption } from '../../../utils/types/types.js';
 import { LoggerStateManager } from '../../state-manager/state-manager.js';
 import { Logger } from '../../logger/logger.js';
+import { randomUUID } from 'node:crypto';
+import { FunctionLog } from '../../../utils/models/logs/function-log/function-log.js';
+import { ObjectLog } from '../../../utils/models/logs/object-log/object-log.js';
 
 export class ChildWorker {
     private static worker$ = new Subject<any>();
@@ -13,36 +16,11 @@ export class ChildWorker {
     static {
         if (isNode) {
             import('node:worker_threads').then(module => {
-                const { parentPort, isMainThread, workerData } = module;
-                console.log(workerData)
+                const { parentPort, isMainThread } = module;
                 if (!isMainThread && parentPort) {
                     const messages$ = fromEvent(parentPort, 'message')
                         .pipe(map((metadata) => (metadata as any).data));
                     messages$.subscribe(this.routeMessage)
-
-                    //     if (parentPort) {
-                    //         const events$ = fromEvent(parentPort, 'message')
-                    //             .pipe(map((event: any) => event.data))
-                    //         // .subscribe()
-                    //         events$.pipe(
-                    //             filter(([type]: any) => type === ACTIONS.ADD_FEATURE),
-                    //             map(([type, value]) => value),
-                    //             tap(ChildtWorker.addFeature)).subscribe()
-
-                    //         events$.pipe(
-                    //             filter(([type]: any) => type === 'log'),
-                    //             map(([type]) => type),
-                    //             tap(() => console.log('PRINTING')),
-                    //             tap(() => console.log(Object.keys(Logger.snapshot['global']).length)),
-                    //             // tap(() => parentPort.postMessage(JSON.stringify(Logger.snapshot)))
-                    //         ).subscribe()
-
-                    //     }
-                    //     this.worker$.subscribe(([kind, request]) => {
-                    //         //TODO PASS CONFIG env 
-                    //         const worker = parentPort;
-                    //         // worker.postMessage([kind, request]);
-                    //     })
                 }
             })
         }
@@ -51,7 +29,10 @@ export class ChildWorker {
     public static routeMessage([action, data]: [string, any]) {
         switch (action) {
             case ACTIONS.ADD_FEATURE:
-                ChildWorker.addFeature(data)
+                LoggerStateManager.addFeature(data)
+                break;
+            case ACTIONS.ADD_LOG:
+                LoggerStateManager.addLog(data)
                 break;
             case 'log':
                 console.log("processing")
@@ -59,13 +40,9 @@ export class ChildWorker {
         }
     }
 
-    public static addFeature(options: TrackingOption) {
-        const featureMetadata: FeatureMetadata = {
-            featureName: options.featureName,
-            expiresAfter: options?.expiresAfter ?? 24 * 60 * 60 * 1000,
-            relatedTo: options?.relatedTo ?? 'global'
-        };
+    public static addFeature(featureMetadata: FeatureMetadata) {
         LoggerStateManager.addFeature(featureMetadata)
     }
-    public static handleLog() { }
+    public static addLog([log, scopeName, featureName]: [FunctionLog | ObjectLog, string, string]) {
+    }
 }
