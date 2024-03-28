@@ -1,17 +1,14 @@
 import { Subject } from 'rxjs';
 import { isNode } from '../../../utils/is-node/is-node.js';
 import { ACTIONS } from '../../../utils/models/enums/worker/worker-actions.js';
+import { BaseLog } from '../../../utils/models/logs/base-log/base-log.js';
 import { TrackingOption } from '../../../utils/types/types.js';
 import { LoggerStateManager } from '../../state-manager/state-manager.js';
 import { ChildWorker } from '../child-worker/child-worker.js';
-import { FunctionLog } from '../../../utils/models/logs/function-log/function-log.js';
-import { ObjectLog } from '../../../utils/models/logs/object-log/object-log.js';
 
 export class ParentWorker {
     static messenger$ = new Subject<any>();
     static actions$ = new Subject<any>();
-    // private static test$ = new fromEvent()
-    // private static test$ = new fromEventPattern()
     static {
         if (isNode) {
             import('node:worker_threads').then(module => {
@@ -32,7 +29,7 @@ export class ParentWorker {
     public static addFeature(options: TrackingOption) {
         this.messenger$.next([ACTIONS.ADD_FEATURE, options])
     }
-    public static addLog(log: FunctionLog | ObjectLog, scopeName: string, featureName: string) {
+    public static addLog(log: BaseLog, scopeName: string, featureName: string) {
         this.messenger$.next([ACTIONS.ADD_LOG, [log, scopeName, featureName]])
     }
 

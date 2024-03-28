@@ -1,4 +1,5 @@
 import { InfererDecorator } from "../../../utils/inferer-decorator/inferer-decorator.js";
+import { FeatureMetadata } from "../../../utils/types/types.js";
 import { LegacyDecoratorTracker } from "./legacy-decorator-tracker/legacy-decorator-tracker.js";
 import { ModernDecoratorTracker } from "./modern-decorator-tracker/modern-decorator-tracker.js";
 
@@ -23,6 +24,10 @@ abstract class DecoratorTracker {
 
 }
 
-export const Log = DecoratorTracker.decorate;
+interface ILog {
+    (options?: Partial<FeatureMetadata>): ReturnType<typeof DecoratorTracker.decorate>
+    new <T extends never>(options: T): T
+}
+export const Log = DecoratorTracker.decorate as ILog;
 
 

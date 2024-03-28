@@ -1,16 +1,10 @@
-import { Subject, filter, from, fromEvent, map, mergeMap, of, partition, tap } from 'rxjs';
+import { fromEvent, map } from 'rxjs';
 import { isNode } from '../../../utils/is-node/is-node.js';
 import { ACTIONS } from '../../../utils/models/enums/worker/worker-actions.js';
-import { FeatureMetadata, TrackingOption } from '../../../utils/types/types.js';
-import { LoggerStateManager } from '../../state-manager/state-manager.js';
 import { Logger } from '../../logger/logger.js';
-import { randomUUID } from 'node:crypto';
-import { FunctionLog } from '../../../utils/models/logs/function-log/function-log.js';
-import { ObjectLog } from '../../../utils/models/logs/object-log/object-log.js';
+import { LoggerStateManager } from '../../state-manager/state-manager.js';
 
 export class ChildWorker {
-    private static worker$ = new Subject<any>();
-    private static actions$ = new Subject<any>();
     static readonly url = new URL(import.meta.url)
     static parent: any;
     static {
@@ -35,14 +29,17 @@ export class ChildWorker {
                 LoggerStateManager.addLog(data)
                 break;
             case 'log':
-                console.log("processing")
-                console.log(Object.keys(Logger.snapshot["global"]).length)
+                Object.keys(Logger.snapshot).forEach(scope => {
+                    Object.keys(Logger.snapshot[scope]).forEach(featureNme => {
+                        console.log(scope, featureNme, Logger.snapshot[scope][featureNme].logsMap)
+                    })
+                })
+                // console.log(Logger.snapshot)
+                // Object.keys(Logger.snapshot['global']).forEach(key => {
+                // console.log(key, Logger.snapshot['global'][key].logsMap)
+                // })
+                break;
         }
     }
 
-    public static addFeature(featureMetadata: FeatureMetadata) {
-        LoggerStateManager.addFeature(featureMetadata)
-    }
-    public static addLog([log, scopeName, featureName]: [FunctionLog | ObjectLog, string, string]) {
-    }
 }
