@@ -16,9 +16,6 @@ export abstract class LegacyDecoratorTracker {
                 featureName,
                 expiresAfter
             }
-            setTimeout(() => {
-                ParentWorker.addFeature(enrichedOptions)
-            }, 0);
 
             if (propertyKey && descriptor) {
                 descriptor.value = FunctionTracker.track(descriptor.value, enrichedOptions);
