@@ -19,6 +19,7 @@ import { ParentWorker } from "./core/workers/parent-worker/parent-worker.js";
 
 @Log({ expiresAfter: 1000 })
 abstract class A {
+    @Log()
     prop2 = false;
     constructor(public prop3: number) { }
     greet() {
@@ -29,7 +30,7 @@ abstract class A {
     }
 }
 
-@Log({ expiresAfter: 1000 })
+// @Log({ expiresAfter: 1000 })
 class F extends A {
     constructor(a: number) {
         super(a)
@@ -39,28 +40,29 @@ class F extends A {
         console.log('WI WI')
         return 1
     }
-    @Log()
     prop = 1;
 
     mymy() { }
 }
 
 const classs = new F(1)
-classs.prop3 = 3
-classs.prop3
+// const classss = new F(1)
+// const classsss = new F(1)
+// classs.prop3 = 3
+classs.prop2 = true;
 // classs.myMethod('ads')
 // setTimeout(() => {
 //     ParentWorker.log()
 // }, 100);
-const trackedFunction = Logger.track(() => {
-    const promise = new Promise(resolve => {
-        setTimeout(() => {
-            resolve('NAOR')
-        }, 10 * 1000);
+// const trackedFunction = Logger.track(() => {
+//     const promise = new Promise(resolve => {
+//         setTimeout(() => {
+//             resolve('NAOR')
+//         }, 10 * 1000);
 
-    })
-    return promise;
-})
+//     })
+//     return promise;
+// })
 
 
 setTimeout(() => {
