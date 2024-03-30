@@ -19,7 +19,6 @@ import 'source-map-support/register.js';
 // // export type { FeatureSnapshot, Snapshot } from './utils/types/types.js';
 
 abstract class A {
-    @Log()
     prop2 = false;
     public prop3: number = 3
     constructor(a: number) { }
