@@ -29,12 +29,12 @@ export class ChildWorker {
                 LoggerStateManager.addLog(data)
                 break;
             case 'log':
-                // Object.keys(Logger.snapshot).forEach(scope => {
-                //     Object.keys(Logger.snapshot[scope]).forEach(featureNme => {
-                //         console.log(scope, featureNme, Logger.snapshot[scope][featureNme].logsMap)
-                //     })
-                // })
-                console.log(Logger.snapshot)
+                Object.keys(Logger.snapshot).forEach(scope => {
+                    Object.keys(Logger.snapshot[scope]).forEach(featureNme => {
+                        console.log(scope, featureNme, Logger.snapshot[scope][featureNme].logsMap)
+                    })
+                })
+                // console.log(Logger.snapshot)
                 // Object.keys(Logger.snapshot['global']).forEach(key => {
                 // console.log(key, Logger.snapshot['global'][key].logsMap)
                 // })
