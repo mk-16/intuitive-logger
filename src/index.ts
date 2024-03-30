@@ -9,6 +9,7 @@
 import { Logger } from "./core/logger/logger.js";
 import { Log } from "./core/trackers/decorator-tracker/decorator-tracker.js";
 import { ParentWorker } from "./core/workers/parent-worker/parent-worker.js";
+import 'source-map-support/register.js';
 
 // // export type { UUID } from 'crypto';
 // // export { LOG_LEVEL } from './utils/models/enums/log-level/log-level.js';

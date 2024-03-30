@@ -3,6 +3,7 @@ import { FeatureMetadata } from "../../../../utils/types/types.js";
 import { ParentWorker } from "../../../workers/parent-worker/parent-worker.js";
 import { FunctionTracker } from "../../function-tracker/function-tracker.js";
 import { ObjectTracker } from "../../object-tracker/object-tracker.js";
+
 export abstract class LegacyDecoratorTracker {
     static dec: symbol = Symbol('dec')
     public static decorate(options?: Partial<FeatureMetadata>) {
