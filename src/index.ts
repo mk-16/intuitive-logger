@@ -9,6 +9,7 @@
 import { Logger } from "./core/logger/logger.js";
 import { Log } from "./core/trackers/decorator-tracker/decorator-tracker.js";
 import { ParentWorker } from "./core/workers/parent-worker/parent-worker.js";
+import 'source-map-support/register.js';
 
 // // export type { UUID } from 'crypto';
 // // export { LOG_LEVEL } from './utils/models/enums/log-level/log-level.js';
@@ -17,14 +18,16 @@ import { ParentWorker } from "./core/workers/parent-worker/parent-worker.js";
 // // export { ObjectLog } from './utils/models/logs/object-log/object-log.js';
 // // export type { FeatureSnapshot, Snapshot } from './utils/types/types.js';
 
-@Log({ expiresAfter: 1000 })
 abstract class A {
     @Log()
     prop2 = false;
-    constructor(public prop3: number) { }
+    public prop3: number = 3
+    constructor(a: number) { }
+    @Log()
     greet() {
         console.log('GOOD BYE')
     }
+    @Log()
     static goodbye() {
         console.log('HELLO from goodbye')
     }
@@ -35,21 +38,33 @@ class F extends A {
     constructor(a: number) {
         super(a)
     }
-
+    @Log()
     myMethod(str: string) {
         console.log('WI WI')
         return 1
     }
+    // @Log()
     prop = 1;
-
+    @Log()
     mymy() { }
 }
 
 const classs = new F(1)
-// const classss = new F(1)
-// const classsss = new F(1)
-// classs.prop3 = 3
-classs.prop2 = true;
+const classf = new F(2)
+classs.prop3 = 3
+classs.prop3
+classf.prop3 = 3
+classf.prop3
+console.log({ classf, classs })
+classs.greet();
+classs.myMethod('sd');
+classs.mymy();
+F.goodbye()
+
+classf.greet();
+classf.myMethod('sd');
+classf.mymy();
+A.goodbye()
 // classs.myMethod('ads')
 // setTimeout(() => {
 //     ParentWorker.log()
@@ -68,3 +83,4 @@ classs.prop2 = true;
 setTimeout(() => {
     ParentWorker.log()
 }, 100);
+
