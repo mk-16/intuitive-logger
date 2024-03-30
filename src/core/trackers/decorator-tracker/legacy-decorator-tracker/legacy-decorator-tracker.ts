@@ -16,8 +16,12 @@ export abstract class LegacyDecoratorTracker {
                 featureName,
                 expiresAfter
             }
+
+            const features = Object.getOwnPropertyDescriptors((target as any)['constructor']);
+            console.log({ features, target })
+
             setTimeout(() => {
-                ParentWorker.addFeature(enrichedOptions)
+                // ParentWorker.addFeature(enrichedOptions)
             }, 0);
 
             if (propertyKey && descriptor) {
