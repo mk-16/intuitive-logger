@@ -17,52 +17,68 @@ import { ParentWorker } from "./core/workers/parent-worker/parent-worker.js";
 // // export { ObjectLog } from './utils/models/logs/object-log/object-log.js';
 // // export type { FeatureSnapshot, Snapshot } from './utils/types/types.js';
 
-@Log({ expiresAfter: 1000 })
 abstract class A {
     prop2 = false;
-    constructor(public prop3: number) { }
+    public prop3: number = 3
+    constructor(a: number) { }
+    @Log()
     greet() {
         console.log('GOOD BYE')
     }
+    @Log()
     static goodbye() {
         console.log('HELLO from goodbye')
     }
 }
 
-@Log({ expiresAfter: 1000 })
+// @Log({ expiresAfter: 1000 })
 class F extends A {
     constructor(a: number) {
         super(a)
     }
-
+    @Log()
     myMethod(str: string) {
         console.log('WI WI')
         return 1
     }
-    @Log()
+    // @Log()
     prop = 1;
-
+    @Log()
     mymy() { }
 }
 
 const classs = new F(1)
+const classf = new F(2)
 classs.prop3 = 3
 classs.prop3
+classf.prop3 = 3
+classf.prop3
+console.log({ classf, classs })
+classs.greet();
+classs.myMethod('sd');
+classs.mymy();
+F.goodbye()
+
+classf.greet();
+classf.myMethod('sd');
+classf.mymy();
+A.goodbye()
 // classs.myMethod('ads')
 // setTimeout(() => {
 //     ParentWorker.log()
 // }, 100);
-const trackedFunction = Logger.track(() => {
-    const promise = new Promise(resolve => {
-        setTimeout(() => {
-            resolve('NAOR')
-        }, 10 * 1000);
+// const trackedFunction = Logger.track(() => {
+//     const promise = new Promise(resolve => {
+//         setTimeout(() => {
+//             resolve('NAOR')
+//         }, 10 * 1000);
 
-    })
-    return promise;
-})
+//     })
+//     return promise;
+// })
 
 
 setTimeout(() => {
     ParentWorker.log()
 }, 100);
+
