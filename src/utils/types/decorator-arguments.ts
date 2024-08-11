@@ -1,7 +1,6 @@
 
-type LegacyDecoratorProperty<T extends object> = keyof T;
-export type ModernDecoratorContext = ClassDecoratorContext | ClassMethodDecoratorContext
-    | ClassFieldDecoratorContext | ClassAccessorDecoratorContext | ClassGetterDecoratorContext |
-    ClassSetterDecoratorContext;
-    
-export type DecoratorArguments<T extends object> = [(LegacyDecoratorProperty<T> | ModernDecoratorContext)?, PropertyDescriptor?]
+export type LegacyDecoratorProperty = string | symbol;
+export type ModernDecoratorContext = ClassMethodDecoratorContext
+    | ClassFieldDecoratorContext;
+
+export type DecoratorArguments<T extends object> = [T, LegacyDecoratorProperty | ModernDecoratorContext, PropertyDescriptor]
