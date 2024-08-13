@@ -1,7 +1,10 @@
-import { MethodLog, Log, ObjectLog } from "../log.js";
+import { MethodLog, Log, ObjectLog, ClassLog } from "../log.js";
 
-export function functionLogGuard(log: Log): log is MethodLog {
+export function methodLogGuard(log: Log): log is MethodLog {
     return log.kind == "method";
+}
+export function classLogGuard(log: Log): log is ClassLog {
+    return log.kind == "class";
 }
 
 // export function functionLogGuard(log: Log): log is FunctionLog {

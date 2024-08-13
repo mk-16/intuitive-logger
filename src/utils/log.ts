@@ -5,9 +5,13 @@ export class Log {
     readonly kind: "class" | "method" | "property" | "function" | "object" | "default" = "default";
 }
 export class ClassLog extends Log {
+    startTime: number | undefined;
+    endTime: number | undefined;
     inputs: Record<string, unknown> | undefined;
+    class: string | undefined;
+    output: unknown;
+    runtime: number | undefined;
     override readonly kind = "class";
-    //todo 
 }
 
 export class MethodLog extends Log {
@@ -18,6 +22,16 @@ export class MethodLog extends Log {
     output: unknown;
     runtime: number | undefined;
     override readonly kind = "method";
+}
+
+export class ConstructorLog extends Log {
+    startTime: number | undefined;
+    endTime: number | undefined;
+    inputs: Record<string, unknown> | undefined;
+    class: string | undefined;
+    output: unknown;
+    runtime: number | undefined;
+    override readonly kind = "class";
 }
 
 export class ObjectLog extends Log {

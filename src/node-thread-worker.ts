@@ -1,6 +1,7 @@
 import { MessagePort, parentPort } from "worker_threads";
-import { functionLogGuard, objectLogGuard } from "./utils/guards/log-guards.js";
+import { classLogGuard, methodLogGuard, objectLogGuard } from "./utils/guards/log-guards.js";
 import { Log } from "./utils/log.js";
+import { fileFileInStack } from "./utils/find-file-in-stack.js";
 export enum LoggerWorkerEvents {
     data = "data"
 }
@@ -12,15 +13,15 @@ export class LoggerWorker {
     static {
         
         parentPort?.on("message",(log: Log)=>{
-            if(functionLogGuard(log)){
+            if(classLogGuard(log) || methodLogGuard(log)){
                 const runtime = (log.endTime ?? 0) - (log.startTime ?? 0);
                 delete log.startTime
                 delete log.endTime
                 log.runtime = runtime;
-                const stackArray = log.stack?.split('\n') ?? [];
-                const index = stackArray.findIndex(str => str.includes('legacy-method-decorator.js'));
-                log.stack = 'file:///'.concat(stackArray[index+1].split('file:///')[1].split(')')[0]);
+                log.stack = log.stack ? fileFileInStack(log.stack, log.kind =="method"?'legacy-method-decorator.js': 'index.js'): undefined;
+                console.log(log)
             }
+            
             else if(objectLogGuard(log)) {
                 // console.log({...log})
             }
