@@ -1,10 +1,12 @@
 import { legacyMethodDecorator } from "./core/decorators/method-decorator/legacy-method-decorator.js";
 import { LoggerWorker } from "./node-main-worker.js";
 import { extractParams } from "./utils/extract-params.js";
-import { ConstructorLog } from "./utils/log.js";
+import { ConstructorLog, Log } from "./utils/log.js";
 import { reduceFunctionArguments } from "./utils/reduce-function-arguments.js";
 import { LegacyArguments, ModernArguments, MonitorType } from "./utils/types.js";
-
+import "source-map-support";
+const config: Record<string, any> = {};
+config.env = typeof window != "undefined" && window.document ? "client" : "server"
 
 function modernDecoratorGuard<T>(args: ModernArguments<T> | LegacyArguments<T>): args is ModernArguments<T> {
     return typeof args[1] == "object"
@@ -61,12 +63,10 @@ function MonitorConstructor(this: any) {
     }
 }
 
-const config: Record<string, any> = {};
-config.env = typeof window != "undefined" && window.document ? "client" : "server"
+// const config: Record<string, any> = {};
+// config.env = typeof window != "undefined" && window.document ? "client" : "server"
 
-const Monitor = MonitorConstructor as MonitorType;
-
-
+const Monitor = MonitorConstructor as any;
 
 @Monitor()
 class Calculator {
@@ -87,7 +87,7 @@ class Calculator {
     }
 }
 
-const test = new Calculator(1);
-const test3 = new Calculator(2);
-console.log(test)
-test.multiply(3, 4);
+// const test = new Calculator(1);
+// test.multiply(3, 4);
+
+export default Monitor

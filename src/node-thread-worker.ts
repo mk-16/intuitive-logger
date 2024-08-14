@@ -1,39 +1,51 @@
-import { MessagePort, parentPort } from "worker_threads";
 import { classLogGuard, methodLogGuard, objectLogGuard } from "./utils/guards/log-guards.js";
 import { Log } from "./utils/log.js";
 import { fileFileInStack } from "./utils/find-file-in-stack.js";
-export enum LoggerWorkerEvents {
-    data = "data"
+
+const config: Record<string, any> = {};
+config.env = typeof window != "undefined" && window.document ? "client" : "server"
+console.log("THREAD WAS READ")
+
+if (config.env == "client" && onmessage) {
+    self.onmessage = (message) => {
+        console.log({ message })
+    }
 }
-const map = new Map();
-
-
-export class LoggerWorker {
-    static #worker: MessagePort;
+class LoggerThreadWorker {
+    static #worker: any;
     static {
-        
-        parentPort?.on("message",(log: Log)=>{
-            if(classLogGuard(log) || methodLogGuard(log)){
-                const runtime = (log.endTime ?? 0) - (log.startTime ?? 0);
-                delete log.startTime
-                delete log.endTime
-                log.runtime = runtime;
-                log.stack = log.stack ? fileFileInStack(log.stack, log.kind =="method"?'legacy-method-decorator.js': 'index.js'): undefined;
-                console.log(log)
-            }
-            
-            else if(objectLogGuard(log)) {
-                // console.log({...log})
-            }
-        })
+        try {
+            // import("node:worker_threads").then(({MessagePort, parentPort}) => {
+            //     if(config.env == "client" && onmessage)
+
+
+            //     parentPort!.on("message",(log: Log)=>{
+            //         if(classLogGuard(log) || methodLogGuard(log)){
+            //             const runtime = (log.endTime ?? 0) - (log.startTime ?? 0);
+            //             delete log.startTime
+            //             delete log.endTime
+            //             log.runtime = runtime;
+            //             log.stack = log.stack ? fileFileInStack(log.stack): undefined;
+            //             console.log(log)
+            //         }
+
+            //         else if(objectLogGuard(log)) {
+            //             // console.log({...log})
+            //         }
+            //     })
+
+            // })
+        }
+        catch (e) {
+            console.log('failed', e)
+        }
     }
 
-    static on(){}
-    static postEvent(event: LoggerWorkerEvents, data:unknown ){
+    static on() { }
+    static postEvent() {
         // this.#worker.postMessage([event,data]);
-    }   
+    }
 }
-
 // const test = 
 // const config: Record<string, any> = {};
 // config.env = typeof window !== "undefined" && window.document !== undefined ? "client" : "server"
@@ -48,8 +60,10 @@ export class LoggerWorker {
 //             // this.#worker = 
 //             setTimeout(() => {
 //                 parentPort?.postMessage("hello world");
-                
+
 //             }, 0);
 //         }
 //     }
 // }
+
+module.exports = { LoggerThreadWorker }

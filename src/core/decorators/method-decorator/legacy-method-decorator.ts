@@ -1,7 +1,9 @@
-import { LoggerWorker } from "../../../node-main-worker.js";
 import { extractParams } from "../../../utils/extract-params.js";
 import { MethodLog } from "../../../utils/log.js";
 import { reduceFunctionArguments } from "../../../utils/reduce-function-arguments.js";
+import { LoggerWorker } from "./../../../node-main-worker.js";
+const config: Record<string, any> = {};
+config.env = typeof window != "undefined" && window.document ? "client" : "server"
 
 export function legacyMethodDecorator<T extends Function>(target: T, property: string | symbol, descriptor: PropertyDescriptor) {
     const originalMethod: Function = descriptor.value;
@@ -22,11 +24,25 @@ export function legacyMethodDecorator<T extends Function>(target: T, property: s
             results.then(data => {
                 log.endTime = performance.now();
                 log.output = data;
-                LoggerWorker.postLog(log);
+        
+                // if (config.env == "server") {
+                    // console.log(import.meta.resolve("node-main-worker.js"))
+                    // import('./../../../node-main-worker.js').then(({ LoggerWorker }) => {
+                    LoggerWorker.postLog(log);
+                    // })
+                // }
             })
             log.output = "Promise";
         }
-        LoggerWorker.postLog(log);
+        // if (config.env == "server") {
+            // console.log(import.meta.dirname, import.meta.filename, import.meta.url)
+
+            // console.log({context: "legacy decorator", log})
+            // import('./../../../node-main-worker.js').then(({ LoggerWorker }) => {
+            //     LoggerWorker?.postLog(log);
+            // });
+            LoggerWorker.postLog(log)
+        // }
         return results;
     };
 }
