@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "main": "/src/index.js",
   "type": "module",
-  "exports": [],
   "scripts": {
     "test": "test",
     "nodemon": "nodemon"
@@ -24,5 +23,8 @@
   "description": "",
   "devDependencies": {
     "nodemon": "^3.1.4"
+  },
+  "dependencies": {
+    "rxjs": "^7.8.1"
   }
 }

@@ -1,10 +1,5 @@
-try {
-    console.log("ffs")
-    // const url = new URL(import.meta.url);
-    onmessage = () => {
-        console.log("logging")
-    }
+import { filter, fromEvent, tap } from "rxjs";
+export const url = import.meta.url;
 
-} catch (e) {
-    console.log('server error')
-}
+fromEvent<MessageEvent>(self, "message").pipe(filter(event => (event.target as any).name === "intuitive-logger-web-worker"), tap(console.log))
+    .subscribe();

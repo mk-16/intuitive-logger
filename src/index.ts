@@ -1,24 +1,12 @@
 try {
     window;
-    console.log("LOGING IN CLIENT");
-    // import('./worker/client/web-worker.js')
-    // .then(() => {
-    var ng;
-    console.log("aaaaaaaaaa")
-    console.log({ ng: ng })
-    console.log({ url: import.meta.url })
-    // const url = new URL('web-worker.js');
-    // const worker = new Worker("./", { 'name': "web-worker", "type": "module", "credentials": "omit" });
-    // worker.onerror = (e) => console.log("some error", e);
-    // worker.postMessage("this is my fucking message")
-    // })
-    // .catch(e => console.log("erroring my freaking mind"));
-} catch (error) {
-    console.log("LOGING IN SERVER");
+    console.log("running Client code");
+    import("./worker/client/web-worker.js").then(({ url }) => {
+        const worker = new Worker(new URL(url), { 'name': "intuitive-logger-web-worker", "type": "module" });
+        worker.postMessage("SUCCESSSS")
+    })
 }
-// if (typeof window !== undefined) {
-//     console.log("LOGING IN CLIENT");
-//     console.log({ window: window })
-// }
-// else
-// console.log("LOGING IN CLIENT");
+catch (e) {
+    console.log("running Server code");
+}
+
