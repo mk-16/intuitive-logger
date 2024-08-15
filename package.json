@@ -1,29 +1,28 @@
 {
   "name": "intuitive-logger",
   "version": "1.0.0",
-  "description": "",
-  "main": "./dist/index.js",
-  "types": "./dist/types",
+  "main": "/src/index.js",
   "type": "module",
+  "exports": [],
   "scripts": {
-    "test": "mocha",
-    "dev": "nodemon"
+    "test": "test",
+    "nodemon": "nodemon"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mk-16/intuitive-logger.git"
+  },
+  "keywords": [
+    "Logger"
+  ],
   "author": "Michael Laloush",
-  "license": "MIT",
-  "devDependencies": {
-    "@types/mocha": "^10.0.6",
-    "@types/node": "^20.10.8",
-    "@types/source-map-support": "^0.5.10",
-    "expect": "^29.7.0",
-    "mocha": "^10.3.0",
-    "nodemon": "^3.0.1",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/mk-16/intuitive-logger/issues"
   },
-  "dependencies": {
-    "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1",
-    "source-map-support": "^0.5.21"
+  "homepage": "https://github.com/mk-16/intuitive-logger#readme",
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^3.1.4"
   }
 }

@@ -1,6 +1,0 @@
-node_modules
-.vscode
-dist
-src/utils/to-new-lib
-src/wip
-src.old
