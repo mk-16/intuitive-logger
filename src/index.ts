@@ -8,5 +8,12 @@ try {
 }
 catch (e) {
     console.log("running Server code");
+    import("node:worker_threads").then(({ Worker }) => {
+        import("./worker/server/worker-thread.js").then(({ url }) => {
+            const worker = new Worker(url)
+            worker.postMessage("WOUP WOUP")
+        })
+    })
 }
 
+export { }
