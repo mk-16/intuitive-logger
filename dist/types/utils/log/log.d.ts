@@ -10,7 +10,7 @@ export declare class FunctionLog extends Log {
     inputs: Record<string, unknown> | undefined;
     class: string | undefined;
     output: unknown;
-    runtime: number | undefined;
+    runtime: `${number}ms` | undefined;
     readonly kind: "class" | "method" | "function";
 }
 export declare class ClassConstructorLog extends FunctionLog {

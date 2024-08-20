@@ -1,9 +1,11 @@
 export function reduceMethodArguments(params, args) {
-    return args.reduce((acc, curr, index) => {
-        acc[params[index]] = curr instanceof Function ?
-            curr.toString() :
-            curr instanceof Promise ? "Promise" : curr;
-        return acc;
-    }, {});
+    const results = {};
+    for (const key of params.keys()) {
+        if (params[key].includes('...'))
+            results[params[key].split('...')[1]] = args.slice(key);
+        else
+            results[params[key]] = args[key];
+    }
+    return results;
 }
 //# sourceMappingURL=reduce-method-arguments.js.map

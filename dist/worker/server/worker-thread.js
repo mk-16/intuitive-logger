@@ -9,7 +9,7 @@ import('node:worker_threads')
             const runtime = (log.endTime ?? 0) - (log.startTime ?? 0);
             delete log.startTime;
             delete log.endTime;
-            log.runtime = runtime;
+            log.runtime = `${runtime}ms`;
             log.stack = log.stack ? findFileInStack(log.stack) : undefined;
             return log;
         }), tap(console.log))

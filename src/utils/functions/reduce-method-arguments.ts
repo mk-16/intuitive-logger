@@ -1,8 +1,10 @@
 export function reduceMethodArguments(params: string[], args: unknown[]) {
-    return args.reduce((acc: Record<string, unknown>, curr, index) => {
-        acc[params[index]] = curr instanceof Function ?
-            curr.toString() :
-            curr instanceof Promise ? "Promise" : curr;
-        return acc;
-    }, {} as Record<string, unknown>);
+    const results: Record<string, unknown> = {};
+    for (const key of params.keys()) {
+        if (params[key].includes('...'))
+            results[params[key].split('...')[1]] = args.slice(key);
+        else
+            results[params[key]] = args[key];
+    }
+    return results;
 }

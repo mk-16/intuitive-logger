@@ -11,7 +11,7 @@ export class FunctionLog extends Log {
     inputs: Record<string, unknown> | undefined;
     class: string | undefined;
     output: unknown;
-    runtime: number | undefined;
+    runtime: `${number}ms` | undefined;
     override readonly kind: "class" | "method" | "function" = "function";
 }
 

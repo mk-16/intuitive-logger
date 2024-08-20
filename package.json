@@ -4,7 +4,6 @@
   "type": "module",
   "types": "./dist/types",
   "main": "./dist/index.js",
-  "private": "true",
   "scripts": {
     "test": "test",
     "nodemon": "nodemon"
@@ -18,7 +17,7 @@
     "Logger"
   ],
   "author": "Michael Laloush",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/mk-16/intuitive-logger/issues"
   },
