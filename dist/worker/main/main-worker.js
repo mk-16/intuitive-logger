@@ -5,7 +5,7 @@ export class LoggerWorker {
         try {
             if (window !== undefined)
                 import("../client/web-worker.js").then(({ url }) => {
-                    this.#worker = new Worker(new URL(url), { 'name': "intuitive-logger-web-worker" });
+                    this.#worker = new Worker(new URL(url), { 'name': "intuitive-logger-web-worker", "type": "module" });
                     for (const log of this.#buffer) {
                         try {
                             this.#worker.postMessage(log);
