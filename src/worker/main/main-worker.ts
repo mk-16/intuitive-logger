@@ -20,16 +20,19 @@ export class LoggerWorker {
                 throw new Error("no window")
         }
         catch (e) {
-            console.log("IN SERVER")
-            if(process !== undefined){
+            if (process !== undefined) {
                 import("worker_threads").then(({ Worker }) => {
                     import("../server/worker-thread.js").then(({ url }) => {
                         this.#worker = new Worker(new URL(url), { "name": "worker-thread" });
                         for (const log of this.#buffer) {
-                            this.#worker.postMessage(log);
+                            try {
+                                this.#worker.postMessage(log);
+                            } catch (e) {
+                                this.#worker.postLog(JSON.parse(JSON.stringify(log)));
+                            }
                         }
                     })
-                })
+                }).catch(e => console.log("MODULE DOES NOT EXIST", this, process))
             }
         }
     }
