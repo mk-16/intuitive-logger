@@ -20,14 +20,16 @@ export class LoggerWorker {
         }
         catch (e) {
             console.log("IN SERVER");
-            import("worker_threads").then(({ Worker }) => {
-                import("../server/worker-thread.js").then(({ url }) => {
-                    this.#worker = new Worker(new URL(url), { "name": "worker-thread" });
-                    for (const log of this.#buffer) {
-                        this.#worker.postMessage(log);
-                    }
+            if (process !== undefined) {
+                import("worker_threads").then(({ Worker }) => {
+                    import("../server/worker-thread.js").then(({ url }) => {
+                        this.#worker = new Worker(new URL(url), { "name": "worker-thread" });
+                        for (const log of this.#buffer) {
+                            this.#worker.postMessage(log);
+                        }
+                    });
                 });
-            });
+            }
         }
     }
     static on() { }
