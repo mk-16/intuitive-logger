@@ -7,6 +7,7 @@ export class LoggerWorker {
         try {
             if (window !== undefined)
                 import("../client/web-worker.js").then(({ url }) => {
+                    console.log(new URL(url))
                     this.#worker = new Worker(new URL(url), { 'name': "intuitive-logger-web-worker", "type": "module" });
                     for (const log of this.#buffer) {
                         try {
