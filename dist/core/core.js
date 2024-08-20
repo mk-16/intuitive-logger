@@ -1,9 +1,3 @@
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 import { legacyMethodDecorator } from "../utils/decorators/legacy-decorator.js";
 import { extractParams } from "../utils/functions/extract-params.js";
 import { reduceMethodArguments } from "../utils/functions/reduce-method-arguments.js";
@@ -65,22 +59,4 @@ function MonitorConstructor() {
 const config = {};
 config.env = typeof window != "undefined" && window.document ? "client" : "server";
 export const Monitor = MonitorConstructor;
-class Calculator {
-    property = 1;
-    constructor(param) { }
-    sum(left, right) {
-        console.time("[method-time]");
-        const results = Promise.resolve(1);
-        console.timeEnd("[method-time]");
-        return results;
-    }
-    multiply(a, b) {
-        return this.sum(a, b);
-    }
-}
-__decorate([
-    Monitor()
-], Calculator.prototype, "sum", null);
-const test = new Calculator(1);
-test.multiply(3, 4);
 //# sourceMappingURL=core.js.map
