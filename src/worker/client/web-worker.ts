@@ -7,7 +7,6 @@ try {
     if (self) {
         fromEvent<MessageEvent<Log>>(window, "message")
             .pipe(
-                tap(event => console.log((event.target as any).name)),
                 filter(event => (event.target as any).name === "intuitive-logger-web-worker"),
                 map(event => event.data),
                 filter((log): log is FunctionLog => functionLogGuard(log)),
