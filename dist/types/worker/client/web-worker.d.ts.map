@@ -1,1 +1,1 @@
-{"version":3,"file":"web-worker.d.ts","sourceRoot":"","sources":["../../../../src/worker/client/web-worker.ts"],"names":[],"mappings":"AA6BA,eAAO,MAAM,GAAG,QAAkB,CAAC"}
+{"version":3,"file":"web-worker.d.ts","sourceRoot":"","sources":["../../../../src/worker/client/web-worker.ts"],"names":[],"mappings":"AA8BA,eAAO,MAAM,GAAG,QAAkB,CAAC"}
