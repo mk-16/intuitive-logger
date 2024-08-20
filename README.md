@@ -1,4 +1,10 @@
 # Intuitive Logger
+
+### Install
+~~~
+ npm install intuitive-logger --save 
+~~~
+
  Given the following logs im can you determine what are the sorting algorithms?
 ##  LOG #1
   ~~~
