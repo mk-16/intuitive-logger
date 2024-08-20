@@ -1,6 +1,7 @@
 import { Log, FunctionLog, ClassMethodLog, ObjectLog } from "./log.js";
 
 export function functionLogGuard(log: Log): log is FunctionLog {
+    console.log(log)
     return log.kind == "method" || log.kind == "class" || log.kind == "function";
 }
 

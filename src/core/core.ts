@@ -69,25 +69,25 @@ export const Monitor = MonitorConstructor as MonitorType;
 
 
 // @Monitor()
-// class Calculator {
-//     // @Monitor()
-//     property = 1;
-//     constructor(param: number) { }
+class Calculator {
+    // @Monitor()
+    property = 1;
+    constructor(param: number) { }
 
-//     @Monitor()
-//     sum(left: number, right: number) {
-//         console.time("[method-time]")
-//         const results = Promise.resolve(1);
-//         console.timeEnd("[method-time]")
-//         return results;
-//     }
+    @Monitor()
+    sum(left: number, right: number) {
+        console.time("[method-time]")
+        const results = Promise.resolve(1);
+        console.timeEnd("[method-time]")
+        return results;
+    }
 
-//     @Monitor()
-//     multiply(a: number, b: number) {
-//         return this.sum(a, b);
-//     }
-// }
+    // @Monitor()
+    multiply(a: number, b: number) {
+        return this.sum(a, b);
+    }
+}
 
-// const test = new Calculator(1);
-// const test3 = new Calculator(2);
-// test.multiply(3, 4);
+const test = new Calculator(1);
+
+test.multiply(3, 4);
