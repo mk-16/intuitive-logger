@@ -5,9 +5,8 @@ export class LoggerWorker {
     static #worker: any;
     static {
         try {
-            if (window !== undefined)
+            if (window !== undefined && window.Worker !== undefined)
                 import("../client/web-worker.js").then(({ url }) => {
-                    console.log(new URL(url))
                     this.#worker = new Worker(new URL(url), { 'name': "intuitive-logger-web-worker", "type": "module" });
                     for (const log of this.#buffer) {
                         try {

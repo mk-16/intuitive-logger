@@ -3,7 +3,7 @@ import { findFileInStack } from "../../utils/functions/findFileInStack.js";
 import { functionLogGuard } from "../../utils/log/log-guards.js";
 try {
     if (self) {
-        fromEvent(window, "message")
+        fromEvent(self, "message")
             .pipe(filter(event => event.target.name === "intuitive-logger-web-worker"), map(event => event.data), tap(console.log), filter((log) => functionLogGuard(log)), map(log => {
             const runtime = (log.endTime ?? 0) - (log.startTime ?? 0);
             delete log.startTime;

@@ -5,7 +5,7 @@ import { functionLogGuard } from "../../utils/log/log-guards.js";
 
 try {
     if (self) {
-        fromEvent<MessageEvent<Log>>(window, "message")
+        fromEvent<MessageEvent<Log>>(self, "message")
             .pipe(
                 filter(event => (event.target as any).name === "intuitive-logger-web-worker"),
                 map(event => event.data),
