@@ -7,8 +7,8 @@ try {
     if (self) {
         fromEvent<MessageEvent<Log>>(self, "message")
             .pipe(
+                filter(event => (event.target as any).name === "intuitive-logger-web-worker"),
                 map(event => event.data),
-                tap(console.log),
                 filter((log): log is FunctionLog => functionLogGuard(log)),
                 map(log => {
                     const runtime = (log.endTime ?? 0) - (log.startTime ?? 0);

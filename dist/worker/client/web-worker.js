@@ -4,7 +4,7 @@ import { functionLogGuard } from "../../utils/log/log-guards.js";
 try {
     if (self) {
         fromEvent(self, "message")
-            .pipe(map(event => event.data), tap(console.log), filter((log) => functionLogGuard(log)), map(log => {
+            .pipe(filter(event => event.target.name === "intuitive-logger-web-worker"), map(event => event.data), filter((log) => functionLogGuard(log)), map(log => {
             const runtime = (log.endTime ?? 0) - (log.startTime ?? 0);
             delete log.startTime;
             delete log.endTime;
