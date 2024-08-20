@@ -56,7 +56,5 @@ function MonitorConstructor() {
         })(args[0], args[1], args[2]);
     };
 }
-const config = {};
-config.env = typeof window != "undefined" && window.document ? "client" : "server";
 export const Monitor = MonitorConstructor;
 //# sourceMappingURL=core.js.map

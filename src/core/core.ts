@@ -14,7 +14,6 @@ function MonitorConstructor(this: any) {
         console.log("win");
         throw new Error("cannot be initiated with new keyword")
     }
-    // console.log("else")
     return <T extends new (...args: unknown[]) => T>(...args: ModernArguments<T> | LegacyArguments<T>) => {
         if (modernDecoratorGuard(args)) {
             return (<T>(target: T | undefined, context: DecoratorContext) => {
@@ -60,34 +59,4 @@ function MonitorConstructor(this: any) {
         })(args[0], args[1], args[2])
     }
 }
-
-const config: Record<string, any> = {};
-config.env = typeof window != "undefined" && window.document ? "client" : "server"
-
 export const Monitor = MonitorConstructor as MonitorType;
-
-
-
-// // @Monitor()
-// class Calculator {
-//     // @Monitor()
-//     property = 1;
-//     constructor(param: number) { }
-
-//     @Monitor()
-//     sum(left: number, right: number) {
-//         console.time("[method-time]")
-//         const results = Promise.resolve(1);
-//         console.timeEnd("[method-time]")
-//         return results;
-//     }
-
-//     // @Monitor()
-//     multiply(a: number, b: number) {
-//         return this.sum(a, b);
-//     }
-// }
-
-// const test = new Calculator(1);
-
-// test.multiply(3, 4);

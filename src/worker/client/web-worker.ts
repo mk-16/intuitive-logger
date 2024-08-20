@@ -24,7 +24,6 @@ try {
     }
 }
 catch (e) {
-    // console.log(e)
 }
 
 export const url = import.meta.url;
