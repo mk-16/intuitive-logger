@@ -9,7 +9,11 @@ export class LoggerWorker {
                 import("../client/web-worker.js").then(({ url }) => {
                     this.#worker = new Worker(new URL(url), { 'name': "intuitive-logger-web-worker" });
                     for (const log of this.#buffer) {
-                        this.#worker.postMessage(log);
+                        try {
+                            this.#worker.postMessage(log);
+                        } catch (e) {
+                            this.#worker.postLog(JSON.parse(JSON.stringify(log)));
+                        }
                     }
                 })
             else
@@ -30,7 +34,12 @@ export class LoggerWorker {
     static on() { }
     static postLog(log: Log) {
         if (this.#worker !== undefined) {
-            return this.#worker.postMessage(log);
+            try {
+                this.#worker.postMessage(log);
+            } catch (e) {
+                this.#worker.postLog(JSON.parse(JSON.stringify(log)));
+            }
+            return;
         }
         this.#buffer.push(log)
     }
