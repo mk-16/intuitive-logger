@@ -5,11 +5,11 @@
  npm install intuitive-logger --save 
 ~~~
 
- Given the following logs im can you determine what are the sorting algorithms?
+ Given the following logs can you determine what are the sorting algorithms?
 ##  LOG #1
   ~~~
   {
-  name: 'guessSort1',
+  name: 'guessSort1', 
   date: '2024-08-20T21:54:46.282Z',
   stack: '*********',
   kind: 'method',
@@ -39,7 +39,7 @@
 ## LOG #2
 ~~~
 {
-  name: 'guessSort3',
+  name: 'guessSort2',
   date: '2024-08-20T21:54:55.733Z',
   stack: '*********',
   kind: 'method',
@@ -61,7 +61,7 @@
 ## LOG #3
 ~~~
 {
-  name: 'guessSort5',
+  name: 'guessSort3',
   date: '2024-08-20T21:54:58.845Z',
   stack: '*********',
   kind: 'method',
@@ -84,7 +84,7 @@
 
 ~~~
 {
-  name: 'guessSort2',
+  name: 'guessSort4',
   date: '2024-08-20T21:54:58.880Z',
   stack: '*********',
   kind: 'method',
@@ -107,7 +107,7 @@
 
 ~~~
 {
-  name: 'guessSort4',
+  name: 'guessSort5',
   date: '2024-08-20T21:55:05.613Z',
   stack: '*********',
   kind: 'method',
@@ -150,7 +150,7 @@ to create informative and relevant logs; providing metadata about the function's
 
 this metadata should be sufficient to infer if a function's execution is creating an issue in your code.
 
-This library leverages the power of workers (server-side) and web-workers (client-side) to impact as little as possible to the code execution, doing all the processing (in the future api calls) through an additional thread ensuring an asynchronous non-pollutant code monitoring.
+This library leverages the power of workers (server-side) and web-workers (client-side) to impact as little as possible to the code execution, doing all the processing (in the future, also api calls) through an additional thread ensuring an asynchronous non-pollutant code monitoring.
 
 # Disclamer
 Currently the library supports only logging class constructor and method invocation through "legacy" decorator.
@@ -234,7 +234,7 @@ LOG
   date: '2024-08-20T17:51:24.820Z',
   stack: 'method invocation file and line (if possible)',       
   kind: 'method',
-  inputs: { '...someParameters': [1, 2] },
+  inputs: { 'someParameters': [1, 2] },
   class: 'SomeClass',
   output: 3,
   runtime: 0.01719999999841093 (in miliseconds)
@@ -273,7 +273,7 @@ LOG #1
   date: '2024-08-20T17:57:59.836Z',
   stack: 'method invocation file and line (if possible)',       
   kind: 'method',
-  inputs: { '...someParameters': [1, 2] },
+  inputs: { 'someParameters': [1, 2] },
   class: 'SomeClass',
   output: 'Promise', 
   runtime: 0.0971999999601394
@@ -285,7 +285,7 @@ LOG #2
   date: '2024-08-20T17:57:59.836Z',
   stack: 'method invocation file and line (if possible)',       
   kind: 'method',
-  inputs: { '...someParameters': [1, 2] },
+  inputs: { 'someParameters': [1, 2] },
   class: 'SomeClass',
   output: 3,
   runtime: 1012.2915999999968

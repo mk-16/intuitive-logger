@@ -1,6 +1,6 @@
 {
   "name": "intuitive-logger",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "type": "module",
   "types": "./dist/types",
   "main": "./dist/index.js",
@@ -8,7 +8,6 @@
     "test": "test",
     "nodemon": "nodemon"
   },
-  
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mk-16/intuitive-logger.git"
