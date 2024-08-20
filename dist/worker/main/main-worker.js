@@ -33,7 +33,7 @@ export class LoggerWorker {
                 this.#worker.postMessage(log);
             }
             catch (e) {
-                this.#worker.postLog(JSON.parse(JSON.stringify(log)));
+                this.#worker.postMessage(JSON.parse(JSON.stringify(log)));
             }
             return;
         }
