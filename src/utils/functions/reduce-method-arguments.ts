@@ -6,5 +6,5 @@ export function reduceMethodArguments(params: string[], args: undefined | unknow
         else
             results[params[key]] = args !== undefined ? args[key] : undefined;
     }
-    return results;
+    return Object.keys(results).length > 0 ? results : undefined;
 }

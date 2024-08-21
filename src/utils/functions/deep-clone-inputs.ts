@@ -1,5 +1,5 @@
-export function deepCloneInputs(inputs: unknown[]) {
-    return inputs.map(element => {
+export function deepCloneInputs(inputs: unknown[] | undefined) {
+    return inputs?.map(element => {
         try {
             return typeof element == "function" ?
                 element.name == "" || element.name == undefined ?
