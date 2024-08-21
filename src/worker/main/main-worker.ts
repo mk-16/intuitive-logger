@@ -21,7 +21,7 @@ export class LoggerWorker {
         }
         catch (e) {
             if (process !== undefined) {
-                import("worker_threads").then(({ Worker }) => {
+                import("node:worker_threads").then(({ Worker }) => {
                     import("../server/worker-thread.js").then(({ url }) => {
                         this.#worker = new Worker(new URL(url), { "name": "worker-thread" });
                         for (const log of this.#buffer) {

@@ -1,1 +1,0 @@
-{"version":3,"file":"globals.d.ts","sourceRoot":"","sources":["../../../../src/utils/types/globals.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,WAAW;IACxB,IAAI,GAAG,CAAC;IACR,QAAO,GAAG,CAAC;CACd;AAED,MAAM,MAAM,eAAe,CAAC,CAAC,IAAI,CAAC,CAAC,GAAG,SAAS,EAAE,gBAAgB,CAAC,CAAC;AACnE,MAAM,MAAM,eAAe,CAAC,CAAC,IAAI,CAAC,CAAC,EAAE,MAAM,GAAG,MAAM,EAAE,kBAAkB,GAAG,SAAS,CAAC,CAAC"}

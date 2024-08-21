@@ -1,18 +1,18 @@
 import { LoggerWorker } from "../../worker/main/main-worker.js";
-import { extractParams } from "../functions/extract-params.js";
-import { reduceMethodArguments } from "../functions/reduce-method-arguments.js";
+import { deepCloneInputs } from "../functions/deep-clone-inputs.js";
 import { ClassMethodLog } from "../log/log.js";
-export function legacyMethodDecorator(target, property, descriptor) {
-    const originalMethod = descriptor.value;
+
+export function modernDecorator<T extends Function>(target: T | undefined, context: DecoratorContext) {
+    const originalMethod = target;
     const log = new ClassMethodLog();
-    log.name = property;
-    log.class = target.constructor.name;
-    const params = extractParams(descriptor.value.toString());
-    descriptor.value = function (...originalArguments) {
+    log.name = context.name;
+    log.class = target?.constructor.name;
+    log.stringifiedTarget = target?.toString();
+    return function <K>(this: K, ...originalArguments: unknown[]) {
         log.date = new Date().toISOString();
-        log.inputs = reduceMethodArguments(params, originalArguments);
+        log.rawInputs = deepCloneInputs(originalArguments);
         log.startTime = performance.now();
-        const results = originalMethod.apply(this, originalArguments);
+        const results = originalMethod?.apply(this, originalArguments);
         log.endTime = performance.now();
         log.stack = new Error().stack;
         log.output = results;
@@ -28,4 +28,3 @@ export function legacyMethodDecorator(target, property, descriptor) {
         return results;
     };
 }
-//# sourceMappingURL=legacy-decorator.js.map

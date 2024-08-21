@@ -9,9 +9,12 @@ export class FunctionLog extends Log {
     startTime: number | undefined;
     endTime: number | undefined;
     inputs: Record<string, unknown> | undefined;
+    rawInputs: unknown[] | undefined;
+    stringifiedTarget: string | undefined;
     class: string | undefined;
     output: unknown;
     runtime: `${number}ms` | undefined;
+
     override readonly kind: "class" | "method" | "function" = "function";
 }
 

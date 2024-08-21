@@ -1,1 +1,0 @@
-{"version":3,"file":"findFileInStack.js","sourceRoot":"","sources":["../../../src/utils/functions/findFileInStack.ts"],"names":[],"mappings":"AAAA,MAAM,UAAU,eAAe,CAAC,KAAa;IACzC,MAAM,UAAU,GAAG,KAAK,CAAC,KAAK,CAAC,IAAI,CAAC,CAAC;IACrC,OAAO,UAAU,CAAC,CAAC,CAAC,CAAC,KAAK,CAAC,GAAG,CAAC,CAAC,GAAG,EAAE,EAAE,OAAO,CAAC,QAAQ,EAAE,EAAE,CAAC,CAAC;AACjE,CAAC"}

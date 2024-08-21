@@ -13,9 +13,13 @@
     "url": "git+https://github.com/mk-16/intuitive-logger.git"
   },
   "keywords": [
-    "Logger"
+    "Logger",
+    "Monitoring",
+    "front-end",
+    "backend"
   ],
   "author": "Michael Laloush",
+  "readme": "./README.md",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mk-16/intuitive-logger/issues"

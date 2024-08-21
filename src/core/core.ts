@@ -1,24 +1,21 @@
 import { legacyMethodDecorator } from "../utils/decorators/legacy-decorator.js";
-import { extractParams } from "../utils/functions/extract-params.js";
-import { reduceMethodArguments } from "../utils/functions/reduce-method-arguments.js";
+import { modernDecorator } from "../utils/decorators/modern-decorator.js";
+import { deepCloneInputs } from "../utils/functions/deep-clone-inputs.js";
 import { ClassConstructorLog } from "../utils/log/log.js";
 import type { LegacyArguments, ModernArguments, MonitorType } from "../utils/types/globals.js";
 import { LoggerWorker } from "../worker/main/main-worker.js";
 
 
-function modernDecoratorGuard<T>(args: ModernArguments<T> | LegacyArguments<T>): args is ModernArguments<T> {
+function modernDecoratorGuard<T extends Function>(args: ModernArguments<T> | LegacyArguments<T>): args is ModernArguments<T> {
     return typeof args[1] == "object"
 }
 function MonitorConstructor(this: any) {
     if (new.target == MonitorConstructor) {
-        console.log("win");
         throw new Error("cannot be initiated with new keyword")
     }
     return <T extends new (...args: unknown[]) => T>(...args: ModernArguments<T> | LegacyArguments<T>) => {
         if (modernDecoratorGuard(args)) {
-            return (<T>(target: T | undefined, context: DecoratorContext) => {
-                console.log("modern decorator called", context.name)
-            })(args[0], args[1])
+            return modernDecorator(args[0], args[1])
         }
         return (<T extends Function>(target: T, property?: string | symbol, descriptor?: PropertyDescriptor | number) => {
             if (typeof descriptor == "number") {
@@ -40,11 +37,11 @@ function MonitorConstructor(this: any) {
                         const log = new ClassConstructorLog();
                         log.name = target.name.concat("Constructor");
                         log.class = target.name;
-                        const params = extractParams(target.toString());
+                        log.stringifiedTarget = target.toString();
                         return new Proxy(target, {
                             construct(target, targetArguments) {
                                 log.date = new Date().toISOString();
-                                log.inputs = reduceMethodArguments(params, targetArguments);
+                                log.rawInputs = deepCloneInputs(targetArguments);
                                 log.startTime = performance.now();
                                 const results = new target(targetArguments);
                                 log.endTime = performance.now();

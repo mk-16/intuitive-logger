@@ -1,11 +1,21 @@
 # Intuitive Logger
 
-### Install
-~~~
- npm install intuitive-logger --save 
-~~~
+intuitive-logger is a library developed and maintained on my free time,
+the idea behind it is to provide Javascript and Typescript developers a no hassle tool
+to log informative and meaningful metadata to them find potentially bad code, or to know that everything
+is working as expected. please allow yourself to look into this fun example bellow, and see if you can 
+identify which of this logs belongs to either of the following description:
 
- Given the following logs can you determine what are the sorting algorithms?
+- Bogosort: It randomly shuffles the data until it's sorted by chance.
+  
+- Bubble Sort: Compares adjacent elements and swaps them if they are in the wrong order, repeatedly iterating through the list.
+
+- Selection Sort: Finds the minimum element in the unsorted part of the array and swaps it with the first unsorted element.
+
+- Insertion Sort: Builds the sorted array one element at a time, inserting new elements into their correct positions.
+
+- Quick Sort: A divide-and-conquer algorithm that picks a pivot element, partitions the array around the pivot, and recursively sorts the sub-arrays.
+
 ##  LOG #1
   ~~~
   {
@@ -157,7 +167,7 @@ Currently the library supports only logging class constructor and method invocat
 because it serve my team's interests the best.
 
 I fully intend to gradually add more features and capabilities to the package, such as (but not limted to):
-- [ ] Typescript 5 decorators.
+- [X] Typescript 5 decorators.
 - [ ] Functions logs.
 - [ ] Object logs (track if a property of an object has changed).
 
@@ -293,7 +303,7 @@ LOG #2
 ~~~
 
 <h3>
-Least but not last, it does support logs from methods that invoke another monitored method
+Last but not least, it does support logs from methods that invoke another monitored method
 </h3>
 
 ~~~
