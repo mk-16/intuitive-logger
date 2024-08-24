@@ -1,6 +1,6 @@
 export interface MonitorType {
     (): any;
-    new(): any;
+    new(...args:any[]): any;
 }
 
 export type ModernArguments<T extends Function> = [T | undefined, DecoratorContext];

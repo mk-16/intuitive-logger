@@ -4,6 +4,10 @@
   "type": "module",
   "types": "./dist/types",
   "main": "./dist/index.js",
+  "funding": {
+    "url": "https://opencollective.com/intuitive-logger",
+    "type": "opencollective"
+  },
   "scripts": {
     "test": "test",
     "nodemon": "nodemon"
