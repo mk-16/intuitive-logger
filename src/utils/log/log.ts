@@ -1,37 +1,54 @@
+import { DecoratorLogKind, RegularLogKind } from "../types/enums.js";
+
 export class Log {
     name: string | symbol | undefined;
+    rawContext: string | undefined;
     date: string | undefined;
     stack: string | undefined;
-    readonly kind: "class" | "method" | "property" | "function" | "object" | "default" = "default";
-}
-
-export class FunctionLog extends Log {
+    serializedData: string | undefined;
     startTime: number | undefined;
     endTime: number | undefined;
+    serializedInputs: string[] | undefined;
     inputs: Record<string, unknown> | undefined;
-    rawInputs: unknown[] | undefined;
-    stringifiedTarget: string | undefined;
-    class: string | undefined;
     output: unknown;
     runtime: `${number}ms` | undefined;
 
-    override readonly kind: "class" | "method" | "function" = "function";
+    constructor(readonly kind: RegularLogKind | DecoratorLogKind) { }
+}
+
+export class FunctionLog extends Log {
+    stringifiedTarget: string | undefined;
+    class: string | undefined;
+    constructor(kind:
+        Exclude<RegularLogKind, "object"> |
+        Exclude<DecoratorLogKind, "Property"> = RegularLogKind.Function) {
+        super(kind)
+    }
+
+
 }
 
 export class ClassConstructorLog extends FunctionLog {
-    override readonly kind = "class";
+    constructor() {
+        super(DecoratorLogKind.Constructor)
+    }
 }
 
 export class ClassMethodLog extends FunctionLog {
-    override readonly kind = "method";
+    override readonly kind: DecoratorLogKind.Method = DecoratorLogKind.Method;
+    constructor() {
+        super(DecoratorLogKind.Method)
+    }
 }
 
 export class ObjectLog extends Log {
     previousValue: unknown;
     currentValue: unknown;
-    override readonly kind = "object";
+    constructor() {
+        super(RegularLogKind.Object)
+    }
 }
 
 export class PropertyLog extends Log {
-    override readonly kind = "property";
+    override readonly kind: DecoratorLogKind.Property = DecoratorLogKind.Property;
 }

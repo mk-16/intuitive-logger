@@ -1,5 +1,5 @@
 import { LoggerWorker } from "../../worker/main/main-worker.js";
-import { deepCloneInputs } from "../functions/deep-clone-inputs.js";
+import { serializeInputs } from "../functions/serialize-inputs.js";
 import { ClassMethodLog } from "../log/log.js";
 
 export function modernDecorator<T extends object>(target: T | undefined, context: DecoratorContext) {
@@ -12,7 +12,7 @@ export function modernDecorator<T extends object>(target: T | undefined, context
         return new Proxy(target, {
             construct(target, argsArray, newTarget) {
                 log.date = new Date().toISOString();
-                log.rawInputs = deepCloneInputs(argsArray);
+                log.serializedInputs = serializeInputs(argsArray);
                 log.startTime = performance.now();
                 const results = new (target as any)(...argsArray);
                 log.endTime = performance.now();
@@ -24,7 +24,7 @@ export function modernDecorator<T extends object>(target: T | undefined, context
 
             apply(target, thisArg, argsArray) {
                 log.date = new Date().toISOString();
-                log.rawInputs = deepCloneInputs(argsArray);
+                log.serializedInputs = serializeInputs(argsArray);
                 log.startTime = performance.now();
                 const results = (target as Function)(...argsArray);
                 log.endTime = performance.now();

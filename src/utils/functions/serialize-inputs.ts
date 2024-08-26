@@ -1,4 +1,4 @@
-export function deepCloneInputs(inputs: unknown[] | undefined) {
+export function serializeInputs(inputs: unknown[] | undefined) {
     return inputs?.map(element => {
         try {
             return typeof element == "function" ?
@@ -7,15 +7,14 @@ export function deepCloneInputs(inputs: unknown[] | undefined) {
                     element.name :
                 element instanceof Promise ?
                     "Promise" :
-                    structuredClone(element);
+                    JSON.stringify(element, (key, value: unknown) => {
+                        console.log({ key, value, element })
+                        if (element == value) { 
+                        }
+                    });
         }
         catch (error: unknown) {
-            try {
-                return JSON.parse(JSON.stringify(element));
-            }
-            catch (error: unknown) {
-                return "non Serializable and inferable object"
-            }
+            return "non Serializable and inferable object"
         }
     })
 }

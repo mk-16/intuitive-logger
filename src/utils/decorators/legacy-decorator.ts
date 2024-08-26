@@ -1,5 +1,4 @@
 import { LoggerWorker } from "../../worker/main/main-worker.js";
-import { deepCloneInputs } from "../functions/deep-clone-inputs.js";
 import { ClassMethodLog } from "../log/log.js";
 
 
@@ -11,7 +10,7 @@ export function legacyMethodDecorator<T extends Function>(target: T, property: s
     log.stringifiedTarget = descriptor.value.toString();
     descriptor.value = function (...originalArguments: unknown[]) {
         log.date = new Date().toISOString();
-        log.rawInputs = deepCloneInputs(originalArguments);
+        // log.rawInputs = deepCloneInputs(originalArguments);
         log.startTime = performance.now();
         const results = originalMethod.apply(this, originalArguments);
         log.endTime = performance.now();
