@@ -32,7 +32,7 @@ export function DecoratorHandler<T extends new (...args: unknown[]) => any>(...a
                 return (<T extends new (...args: unknown[]) => T>(target: T) => {
                     const log = new ClassConstructorLog();
                     log.name = target.name//.concat("Constructor");
-                    log.stringifiedTarget = target.toString();
+                    // log.stringifiedTarget = target.toString();
                     return new Proxy(target, {
                         construct(target, targetArguments) {
                             log.date = new Date().toISOString();

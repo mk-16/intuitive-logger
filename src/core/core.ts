@@ -6,26 +6,38 @@ import { FunctionLog, Log, ObjectLog } from "../utils/log/log.js";
 import { DecoratorLogKind, RegularLogKind } from "../utils/types/enums.js";
 import type { MonitorType } from "../utils/types/globals.js";
 import { LoggerWorker } from "../worker/main/main-worker.js";
-import { serializeInputs } from "../utils/functions/serialize-inputs.js";
+import { serializeInputs, serializeOutput } from "../utils/functions/serialize-inputs.js";
 
-function populateLogSync(this: Log, cb: Function, ...args: unknown[]) {
-    const index = args.pop() as number;
-    console.log(args[index])
-    this.serializedInputs = serializeInputs(args[index] as unknown[]);
-    this.startTime = performance.now();
-    this.output = cb(...args);
-    this.endTime = performance.now();
-    // console.log(cb(...args), args)
-}
+
 function createProxyHandler<T extends Function>(this: FunctionLog | ObjectLog, ...args: any[]): ProxyHandler<T> {
     const proxyHandler: ProxyHandler<T> = {
         apply: (target, thisArg, argsArray) => {
+            this.serializedInputs = serializeInputs(argsArray as unknown[]);
+            this.startTime = performance.now();
+            const output = Reflect.apply(target, thisArg, argsArray);
+            this.endTime = performance.now();
+            this.stack = new Error().stack;
+            if (output instanceof Promise) {
+                output.then(data => {
+                    this.endTime = performance.now();
+                    this.output = data;
+                    LoggerWorker.postLog(this);
+                });
+                this.output = "Promise";
+            }
             LoggerWorker.postLog(this);
-            console.log(thisArg)
-            populateLogSync.call(this, Reflect.apply, target, thisArg, argsArray, 2)
-            return Reflect.apply(target, thisArg, argsArray)
+            return output;
         },
-        construct: constructHandler.bind(this),
+        construct: (target, argsArray, newTarget) => {
+            this.serializedInputs = serializeInputs(argsArray as unknown[]);
+            this.startTime = performance.now();
+            const output = Reflect.construct(target, argsArray, newTarget);
+            this.endTime = performance.now();
+            this.stack = new Error().stack;
+            this.serializedOutput = serializeOutput(output);
+            LoggerWorker.postLog(this);
+            return output;
+        },
         defineProperty(target, property, attributes) {
             console.log({ reflect: 'defineProperty called', property })
             return Reflect.defineProperty(target, property, attributes);
@@ -34,8 +46,15 @@ function createProxyHandler<T extends Function>(this: FunctionLog | ObjectLog, .
             console.log({ reflect: 'deleteProperty called', property })
             return Reflect.deleteProperty(target, property);
         },
-        get: (target, property, receiver) => {
-            console.log({ reflect: 'get called', property })
+        get: <T extends object>(target: T, property: keyof typeof target, receiver: T) => {
+            // this.serializedInputs = serializeInputs([target[property]] as unknown[]);
+            // this.startTime = performance.now();
+            // const output = Reflect.get(target, property, receiver);
+            // this.endTime = performance.now();
+            // this.stack = new Error().stack;
+            // this.serializedOutput = serializeOutput(output);
+            // LoggerWorker.postLog(this);
+
             return Reflect.get(target, property, receiver);
         },
         getOwnPropertyDescriptor(target, property) {
@@ -83,34 +102,43 @@ function createProxyHandler<T extends Function>(this: FunctionLog | ObjectLog, .
 function MonitorConstructor(...args: [...any]) {
 
     if (new.target == MonitorConstructor) {
-        const log = typeof args[0] == "function" ? new FunctionLog() : new ObjectLog();
+
+        const serializedData = JSON.stringify(args[0]) ?? args[0].toString();
+
+        const log = typeof args[0] == "function" ?
+            new FunctionLog(
+                serializedData.startsWith('class') ?
+                    DecoratorLogKind.Constructor :
+                    RegularLogKind.Function
+            ) :
+            new ObjectLog();
+
         log.serializedData = JSON.stringify(args[0]) ?? args[0].toString();
-        // console.log(log)
-        // console.log({ name: foo.name, length: foo.length, t: foo.constructor.length, ff: foo.constructor() })
-        // log.buffer = serialize(typeof args[0] == "function" ? docode(args[0]) : args[0]);
-        // log.stack = new Error().stack;
-        // log.name = args[1] ?? 'anonymous';
-        //     const stringifyedFunction: string = args[0].toString();
-        //     const kind = stringifyedFunction.startsWith('class') ? DecoratorLogKind.Constructor : RegularLogKind.Function;
-        //     const log = createLog(kind);
-        //     return new Proxy(args.shift(), createProxyHandler.bind(log)(...args));
-        // }
-        // const log = new ObjectLog();
+
         return new Proxy(args.shift(), createProxyHandler.bind(log)(...args));
 
     }
     return DecoratorHandler
 }
 export const Monitor = MonitorConstructor as MonitorType;
-
+class T {
+    ke;
+    constructor(hello: number) {
+        this.ke = hello;
+    }
+    method() { }
+}
 // const foo = new Monitor((param: number) => { })
 // foo()
-const t = () => { };
-const foo = new Monitor((a: 1) => { return 1 }, "someScope");
+function t(a: any) { return true };
+const foo = new Monitor(function () { }, "someScope");
+const foo2 = new Monitor(T, "someScope");
 // foo.bind({})(1)
-// new foo()
+const b = new foo2(7)
+// b.ke;
+
 // foo();
-foo(1)
+// foo(1)
 // foo.a = 3
 
 // @Monitor({ hello: 1 })

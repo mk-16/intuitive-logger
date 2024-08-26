@@ -6,10 +6,10 @@ export function legacyMethodDecorator<T extends Function>(target: T, property: s
     const originalMethod: Function = descriptor.value;
     const log = new ClassMethodLog();
     log.name = property;
-    log.class = target.constructor.name;
-    log.stringifiedTarget = descriptor.value.toString();
+    // log.class = target.constructor.name;
+    // log.stringifiedTarget = descriptor.value.toString();
     descriptor.value = function (...originalArguments: unknown[]) {
-        log.date = new Date().toISOString();
+        // log.date = new Date().toISOString();
         // log.rawInputs = deepCloneInputs(originalArguments);
         log.startTime = performance.now();
         const results = originalMethod.apply(this, originalArguments);

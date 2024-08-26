@@ -1,10 +1,10 @@
-export function reduceMethodArguments(params: string[], args: undefined | unknown[]) {
+export function reduceMethodArguments(params: string[], args: undefined | string[]) {
     const results: Record<string, unknown> = {};
-    for (const key of params.keys()) {
-        if (params[key].includes('...'))
-            results[params[key].split('...')[1]] = args?.slice(key);
+    for (const index of params.keys()) {
+        if (params[index].includes('...') && args != undefined)
+            results[params[index].split('...')[1]] = JSON.parse('[]'); //args.slice[index]
         else
-            results[params[key]] = args !== undefined ? args[key] : undefined;
+            results[params[index]] = args !== undefined ? JSON.parse(args[index]) : undefined;
     }
     return Object.keys(results).length > 0 ? results : undefined;
 }

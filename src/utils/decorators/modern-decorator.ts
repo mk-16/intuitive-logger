@@ -5,8 +5,8 @@ import { ClassMethodLog } from "../log/log.js";
 export function modernDecorator<T extends object>(target: T | undefined, context: DecoratorContext) {
     const log = new ClassMethodLog();
     log.name = context.name;
-    log.class = (target as any)?.name;
-    log.stringifiedTarget = target?.toString();
+    // log.class = (target as any)?.name;
+    // log.stringifiedTarget = target?.toString();
 
     if (target)
         return new Proxy(target, {
