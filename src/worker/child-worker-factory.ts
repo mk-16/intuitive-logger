@@ -40,7 +40,9 @@ export abstract class ChildWorkerFactory {
                     // function extractFunctionName(str: string) {
                     //     return str.
                     //  }
-                    log.name = log.kind == DecoratorLogKind.Constructor ? log.serializedData?.split('class ')[1]?.split(' ')[0].concat('Constructor') : '';
+                    log.name = log.kind == DecoratorLogKind.Constructor ?
+                        log.serializedData?.split('class ')[1]?.split(' ')[0].concat('Constructor') :
+                        log.serializedData?.split('(')[0];
                     log.date = new Date().toISOString();
                     log.stack = log.stack ? findFileInStack(log.stack) : undefined;
                     // delete log.buffer;
@@ -51,10 +53,10 @@ export abstract class ChildWorkerFactory {
                     log.inputs = reduceMethodArguments(extractParams(log.serializedData), log.serializedInputs);
                     delete log.serializedInputs;
                     try {
-                         log.output = log.serializedOutput ? JSON.parse(log.serializedOutput) : undefined;
+                        log.output = log.serializedOutput ? JSON.parse(log.serializedOutput) : undefined;
                     }
-                    catch(e){
-                        console.log({FFFF:log.serializedOutput})
+                    catch (e) {
+                        console.log({ error: log.serializedOutput })
                     }
                     delete log.serializedOutput;
                     delete log.serializedData;

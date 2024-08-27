@@ -50,4 +50,5 @@ export class PropertyLog extends Log {
     constructor() {
         super(DecoratorLogKind.Property)
     }
+
 }
