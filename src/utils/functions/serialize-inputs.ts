@@ -1,17 +1,5 @@
 export function serializeInputs(inputs: unknown[] | undefined) {
     return inputs?.map(element => {
-        // try {
-        //     return typeof element == "function" ?
-        //         element.name == "" || element.name == undefined ?
-        //             "anonymous Function" :
-        //             element.name :
-        //         element instanceof Promise ?
-        //             "Promise" :
-        //             JSON.stringify(element);
-        // }
-        // catch (error: unknown) {
-        //     return "Non-serializable input"
-        // }
         return typeof element == "function" ?
             element.name == "" || element.name == undefined ?
                 "anonymous Function" :

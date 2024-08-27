@@ -2,40 +2,46 @@ import { deserialize, serialize, Serializer } from "v8";
 import { DecoratorHandler } from "../utils/decorators/decorator-handler.js";
 import { constructHandler } from "../utils/handlers/construct-handler.js";
 import { createLog } from "../utils/log/initialize-log.js";
-import { FunctionLog, Log, ObjectLog } from "../utils/log/log.js";
+import { ClassConstructorLog, FunctionLog, Log, ObjectLog, PropertyLog } from "../utils/log/log.js";
 import { DecoratorLogKind, RegularLogKind } from "../utils/types/enums.js";
 import type { MonitorType } from "../utils/types/globals.js";
 import { LoggerWorker } from "../worker/main/main-worker.js";
 import { serializeInputs, serializeOutput } from "../utils/functions/serialize-inputs.js";
 
 
-function createProxyHandler<T extends Function>(this: FunctionLog | ObjectLog, ...args: any[]): ProxyHandler<T> {
+function createProxyHandler<T extends Function>(...args: any[]): ProxyHandler<T> {
     const proxyHandler: ProxyHandler<T> = {
         apply: (target, thisArg, argsArray) => {
-            this.serializedInputs = serializeInputs(argsArray as unknown[]);
-            this.startTime = performance.now();
+            console.log({ reflect: 'set apply', argsArray })
+            const log = new FunctionLog();
+            log.serializedData = target.toString();
+            log.serializedInputs = serializeInputs(argsArray as unknown[]);
+            log.startTime = performance.now();
             const output = Reflect.apply(target, thisArg, argsArray);
-            this.endTime = performance.now();
-            this.stack = new Error().stack;
+            log.endTime = performance.now();
+            log.stack = new Error().stack;
             if (output instanceof Promise) {
                 output.then(data => {
-                    this.endTime = performance.now();
-                    this.output = data;
-                    LoggerWorker.postLog(this);
+                    log.endTime = performance.now();
+                    log.output = data;
+                    // LoggerWorker.postLog(log);
                 });
-                this.output = "Promise";
+                log.output = "Promise";
             }
-            LoggerWorker.postLog(this);
+            // LoggerWorker.postLog(log);
             return output;
         },
-        construct: (target, argsArray, newTarget) => {
-            this.serializedInputs = serializeInputs(argsArray as unknown[]);
-            this.startTime = performance.now();
+        construct: <T extends Function>(target: T extends new (...args: unknown[]) => any ? T : never, argsArray: unknown[], newTarget: Function) => {
+            const log = new ClassConstructorLog();
+            log.serializedData = target.toString();
+            log.serializedInputs = serializeInputs(argsArray as unknown[]);
+            log.startTime = performance.now();
+            // const output = new target(...argsArray);
             const output = Reflect.construct(target, argsArray, newTarget);
-            this.endTime = performance.now();
-            this.stack = new Error().stack;
-            this.serializedOutput = serializeOutput(output);
-            LoggerWorker.postLog(this);
+            log.endTime = performance.now();
+            log.stack = new Error().stack;
+            log.serializedOutput = serializeOutput(output);
+            // LoggerWorker.postLog(log);
             return output;
         },
         defineProperty(target, property, attributes) {
@@ -47,15 +53,20 @@ function createProxyHandler<T extends Function>(this: FunctionLog | ObjectLog, .
             return Reflect.deleteProperty(target, property);
         },
         get: <T extends object>(target: T, property: keyof typeof target, receiver: T) => {
-            // this.serializedInputs = serializeInputs([target[property]] as unknown[]);
-            // this.startTime = performance.now();
-            // const output = Reflect.get(target, property, receiver);
-            // this.endTime = performance.now();
-            // this.stack = new Error().stack;
-            // this.serializedOutput = serializeOutput(output);
-            // LoggerWorker.postLog(this);
+            // console.log({ reflect: 'get called', property })
+            const log = new PropertyLog();
+            log.serializedData = JSON.stringify(target) ?? target.toString();
+            // console.log({ serializeData: log.serializedData, property })
+            log.serializedInputs = serializeInputs([property] as unknown[]);
+            // , Object.getOwnPropertyDescriptors(target)
+            log.startTime = performance.now();
+            const output = Reflect.get(target, property, receiver);
+            log.endTime = performance.now();
+            log.stack = new Error().stack;
+            log.serializedOutput = serializeOutput(output);
+            // LoggerWorker.postLog(log);
 
-            return Reflect.get(target, property, receiver);
+            return output;
         },
         getOwnPropertyDescriptor(target, property) {
             console.log({ reflect: 'getOwnPropertyDescriptor called', property })
@@ -83,11 +94,11 @@ function createProxyHandler<T extends Function>(this: FunctionLog | ObjectLog, .
         },
         set: <K extends Record<string | symbol, unknown>>(target: K, property: string | symbol, newValue: unknown, receiver: K) => {
             console.log({ reflect: 'set called', property })
-            if (this instanceof ObjectLog) {
-                this.previousValue = target[property];
-                this.currentValue = newValue;
-            }
-            LoggerWorker.postLog(this);
+            // if (this instanceof ObjectLog) {
+            //     this.previousValue = target[property];
+            //     this.currentValue = newValue;
+            // }
+            // LoggerWorker.postLog(this);
             return Reflect.set(target, property, newValue, receiver);
         },
         setPrototypeOf(target, prototype) {
@@ -105,17 +116,31 @@ function MonitorConstructor(...args: [...any]) {
 
         const serializedData = JSON.stringify(args[0]) ?? args[0].toString();
 
-        const log = typeof args[0] == "function" ?
-            new FunctionLog(
-                serializedData.startsWith('class') ?
-                    DecoratorLogKind.Constructor :
-                    RegularLogKind.Function
-            ) :
-            new ObjectLog();
+        // const log = typeof args[0] == "function" ?
+        //     new FunctionLog(
+        //         serializedData.startsWith('class') ?
+        //             DecoratorLogKind.Constructor :
+        //             RegularLogKind.Function
+        //     ) :
+        //     new ObjectLog();
 
-        log.serializedData = JSON.stringify(args[0]) ?? args[0].toString();
+        // console.log(Object.getOwnPropertyDescriptors(args[0]))
+        // for (const prop in args[0]) {
+        //     console.log({ prop })
+        // }
 
-        return new Proxy(args.shift(), createProxyHandler.bind(log)(...args));
+        function chainCrawler<T extends { prototype: T }>(object: T): any {
+            console.log({ JIT: Object.getOwnPropertyNames(object ?? {}) }, '\n\n')
+            return object?.prototype ? chainCrawler(object.prototype) : null;
+        }
+        chainCrawler(args[0])
+        // console.log({ t: args[0], p: Object.getOwnPropertyNames(args[0].prototype ?? {}) })
+        for (const prop2 in args[0].prototype) {
+            console.log({ prop2 })
+        }
+        return new Proxy(args.shift(), {
+
+        });
 
     }
     return DecoratorHandler
@@ -126,16 +151,28 @@ class T {
     constructor(hello: number) {
         this.ke = hello;
     }
-    method() { }
+    static method() { }
+    other() { }
 }
 // const foo = new Monitor((param: number) => { })
 // foo()
-function t(a: any) { return true };
-const foo = new Monitor(function () { }, "someScope");
+// function t(a: any) { return true };
+// const foo = new Monitor(function () { }, "someScope");
 const foo2 = new Monitor(T, "someScope");
+// const ultimate = new Monitor(new foo2(4), "someScope");
+// const foo3 = new Monitor({ a: 3, som() { } }, "someScope");
+foo2.method()
+// const tt = new foo2(4);
+// tt.other()
+// foo3.a
+// foo3.som()
+// ultimate.other()
 // foo.bind({})(1)
-const b = new foo2(7)
-// b.ke;
+// const b = new foo2(7)
+// T.name
+// b.ke = 5;
+// console.log(b)
+// T.method();
 
 // foo();
 // foo(1)

@@ -47,5 +47,7 @@ export class ObjectLog extends Log {
 }
 
 export class PropertyLog extends Log {
-    override readonly kind: DecoratorLogKind.Property = DecoratorLogKind.Property;
+    constructor() {
+        super(DecoratorLogKind.Property)
+    }
 }

@@ -50,7 +50,12 @@ export abstract class ChildWorkerFactory {
                     delete log.endTime;
                     log.inputs = reduceMethodArguments(extractParams(log.serializedData), log.serializedInputs);
                     delete log.serializedInputs;
-                    log.output = log.serializedOutput ? JSON.parse(log.serializedOutput) : undefined;
+                    try {
+                         log.output = log.serializedOutput ? JSON.parse(log.serializedOutput) : undefined;
+                    }
+                    catch(e){
+                        console.log({FFFF:log.serializedOutput})
+                    }
                     delete log.serializedOutput;
                     delete log.serializedData;
                     log.runtime = `${parseFloat(runtime.toFixed(4))}ms`;
