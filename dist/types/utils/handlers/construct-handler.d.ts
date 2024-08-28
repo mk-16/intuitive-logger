@@ -1,2 +1,0 @@
-export declare function constructHandler<T extends Function>(this: unknown | undefined, target: T extends new (...args: unknown[]) => any ? T : never, argsArray: unknown[], newTarget: Function): any;
-//# sourceMappingURL=construct-handler.d.ts.map
