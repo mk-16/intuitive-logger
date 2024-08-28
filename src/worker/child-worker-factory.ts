@@ -1,10 +1,10 @@
-import { fromEvent, map, Subscription, tap } from "rxjs";
+import { fromEvent, map, tap } from "rxjs";
 import { extractParams } from "../utils/functions/extract-params.js";
 import { findFileInStack } from "../utils/functions/find-file-in-stack.js";
 import { reduceMethodArguments } from "../utils/functions/reduce-method-arguments.js";
+import { propertyLogGuard } from "../utils/log/log-guards.js";
 import { Log } from "../utils/log/log.js";
 import { DecoratorLogKind } from "../utils/types/enums.js";
-import { propertyLogGuard } from "../utils/log/log-guards.js";
 
 
 export abstract class ChildWorkerFactory {
