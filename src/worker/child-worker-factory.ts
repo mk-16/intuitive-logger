@@ -1,11 +1,10 @@
-import { filter, fromEvent, map, Subscription, tap } from "rxjs";
-import { FunctionLog, Log } from "../utils/log/log.js";
-import { functionLogGuard } from "../utils/log/log-guards.js";
-import { reduceMethodArguments } from "../utils/functions/reduce-method-arguments.js";
+import { fromEvent, map, Subscription, tap } from "rxjs";
 import { extractParams } from "../utils/functions/extract-params.js";
 import { findFileInStack } from "../utils/functions/find-file-in-stack.js";
-import { deserialize } from "v8";
-import { DecoratorLogKind, RegularLogKind } from "../utils/types/enums.js";
+import { reduceMethodArguments } from "../utils/functions/reduce-method-arguments.js";
+import { Log } from "../utils/log/log.js";
+import { DecoratorLogKind } from "../utils/types/enums.js";
+import { propertyLogGuard } from "../utils/log/log-guards.js";
 
 
 export abstract class ChildWorkerFactory {
@@ -50,7 +49,14 @@ export abstract class ChildWorkerFactory {
                     const runtime = (log.endTime ?? 0) - (log.startTime ?? 0);
                     delete log.startTime;
                     delete log.endTime;
-                    log.inputs = reduceMethodArguments(extractParams(log.serializedData), log.serializedInputs);
+                    if (propertyLogGuard(log)) {
+                        log.currentValue = log.serializedPreviousValue ? JSON.parse(log.serializedPreviousValue) : undefined;
+                        log.previousValue = log.serializedCurrentValue ? JSON.parse(log.serializedCurrentValue) : undefined;
+                        delete log.serializedPreviousValue;
+                        delete log.serializedCurrentValue;
+                    }
+                    else
+                        log.inputs = reduceMethodArguments(extractParams(log.serializedData), log.serializedInputs);
                     delete log.serializedInputs;
                     try {
                         log.output = log.serializedOutput ? JSON.parse(log.serializedOutput) : undefined;

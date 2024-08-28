@@ -47,8 +47,15 @@ export class ObjectLog extends Log {
 }
 
 export class PropertyLog extends Log {
+    serializedPreviousValue: string | undefined;
+    serializedCurrentValue: string | undefined;
+
+    previousValue: unknown | undefined;
+    currentValue: unknown | undefined;
+    
     constructor() {
         super(DecoratorLogKind.Property)
+        delete this.inputs;
     }
 
 }
