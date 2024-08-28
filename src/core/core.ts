@@ -37,6 +37,3 @@ function MonitorConstructor(...args: [...any]) {
     return DecoratorHandler
 }
 export const Monitor = MonitorConstructor as MonitorType;
-
-const trackedObject = new Monitor(function hello(...args: any[]){ return args});
-trackedObject(1,2,3)
