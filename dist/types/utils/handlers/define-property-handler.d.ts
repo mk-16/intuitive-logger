@@ -1,0 +1,2 @@
+export declare function definePropertyHandler<T extends object, K extends string | symbol>(this: any, target: T, property: K extends keyof T ? K : never, attributes: PropertyDescriptor): boolean;
+//# sourceMappingURL=define-property-handler.d.ts.map

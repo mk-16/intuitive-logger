@@ -1,0 +1,1 @@
+{"version":3,"file":"web-worker.js","sourceRoot":"","sources":["../../../src/worker/client/web-worker.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,kBAAkB,EAAE,MAAM,4BAA4B,CAAC;AAChE,IAAI,CAAC;IACD,IAAI,IAAI,EAAE,CAAC;QACP,kBAAkB,CAAC,MAAM,CAAC,IAAI,CAAC,CAAC;IACpC,CAAC;AACL,CAAC;AACD,OAAO,CAAC,EAAE,CAAC;AACX,CAAC;AAED,MAAM,CAAC,MAAM,GAAG,GAAG,MAAM,CAAC,IAAI,CAAC,GAAG,CAAC"}

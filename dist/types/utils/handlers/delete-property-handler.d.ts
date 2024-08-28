@@ -1,0 +1,2 @@
+export declare function deletePropertyHandler<T extends object, K extends string | symbol>(target: T, property: K extends keyof T ? K : never): boolean;
+//# sourceMappingURL=delete-property-handler.d.ts.map
