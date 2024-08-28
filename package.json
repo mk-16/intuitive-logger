@@ -5,7 +5,7 @@
   "types": "./dist/types",
   "main": "./dist/index.js",
   "funding": {
-    "url": "https://opencollective.com/intuitive-logger",
+    "url": "https://opencollective.com/intuitive-logger/contribute",
     "type": "opencollective"
   },
   "scripts": {
