@@ -1,14 +1,11 @@
 
-import { LoggerWorker } from "../../worker/main/main-worker.js";
-import { ClassConstructorLog } from "../log/log.js";
+import { constructHandler } from "../handlers/construct-handler.js";
 import { LegacyArguments, ModernArguments } from "../types/globals.js";
 import { modernDecoratorGuard } from "./decorator-kind-guard.js";
 import { legacyMethodDecorator } from "./legacy-decorator.js";
 import { modernDecorator } from "./modern-decorator.js";
 
 
-
-//todo fix types
 export function DecoratorHandler<T extends new (...args: unknown[]) => any>(...args: ModernArguments<T> | LegacyArguments<T>) {
     if (modernDecoratorGuard(args)) {
         return modernDecorator(args[0], args[1])
@@ -30,21 +27,8 @@ export function DecoratorHandler<T extends new (...args: unknown[]) => any>(...a
                 throw error;
             } else {
                 return (<T extends new (...args: unknown[]) => T>(target: T) => {
-                    const log = new ClassConstructorLog();
-                    log.name = target.name//.concat("Constructor");
-                    // log.stringifiedTarget = target.toString();
                     return new Proxy(target, {
-                        construct(target, targetArguments) {
-                            log.date = new Date().toISOString();
-                            // log.rawInputs = deepCloneInputs(targetArguments);
-                            log.startTime = performance.now();
-                            const results = new target(targetArguments);
-                            log.endTime = performance.now();
-                            log.stack = new Error().stack;
-                            log.output = results.toString();
-                            LoggerWorker.postLog(log);
-                            return results;
-                        }
+                        construct: constructHandler
                     })
                 })(args[0])
             }

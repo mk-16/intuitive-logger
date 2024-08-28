@@ -2,7 +2,7 @@ import { LoggerWorker } from "../../worker/main/main-worker.js";
 import { serializeInputs, serializeOutput } from "../functions/serialize-inputs.js";
 import { ClassMethodLog, FunctionLog } from "../log/log.js";
 
-export function applyHandler<T extends Function>(this: undefined | "method", target: T, thisArg: unknown, argsArray: unknown[]) {
+export function applyHandler<T>(this: undefined | "method", target: T extends Function ? T : never, thisArg: unknown, argsArray: unknown[]) {
     const log = this == 'method' ? new ClassMethodLog() : new FunctionLog();
     log.serializedData = target.toString();
     log.serializedInputs = serializeInputs(argsArray as unknown[]);

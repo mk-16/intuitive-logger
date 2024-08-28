@@ -28,6 +28,7 @@ export class LoggerWorker {
                             try {
                                 this.#worker.postMessage(log);
                             } catch (e) {
+                                console.log({LOG: log});
                                 this.#worker.postLog(JSON.parse(JSON.stringify(log)));
                             }
                         }
@@ -49,3 +50,4 @@ export class LoggerWorker {
         this.#buffer.push(log)
     }
 }
+

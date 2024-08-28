@@ -1,4 +1,3 @@
-import { Serializer } from "v8";
 import { RegularLogKind } from "../types/enums.js";
 
 export function serialize<T extends Object>(target: T, kind: RegularLogKind): string | T {
