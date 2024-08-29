@@ -11,6 +11,7 @@ export function serializeInputs(inputs: unknown[] | undefined) {
 }
 
 export function serializeOutput(output: unknown | undefined) {
+    // console.log( Object.hasOwn(output ?? {}, '_idleTimeout'))
     return typeof output == "function" ?
         output.name == "" || output.name == undefined ?
             "anonymous Function" :

@@ -15,13 +15,12 @@ export abstract class ChildWorkerFactory {
                     log.date = new Date().toISOString();
                     log.stack = log.stack ? findFileInStack(log.stack) : undefined;
                     log.runtime = `${parseFloat(((log.endTime ?? 0) - (log.startTime ?? 0)).toFixed(4))}ms`;
-
                     log.name = log.kind == DecoratorLogKind.Constructor ?
                         log.name != undefined ?
                             log.name.toString().concat('Constructor') :
                             log.serializedData?.split('class ')[1]?.split(' ')[0].concat('Constructor') :
-                        log.serializedData?.split('(')[0];
-
+                        log.serializedData?.split('(')[0] ;
+                    log.name = log.name != ''? log.name : 'anonymous'
                     if (propertyLogGuard(log)) {
                         log.previousValue = log.serializedPreviousValue ? JSON.parse(log.serializedPreviousValue) : undefined;
                         log.currentValue = log.serializedCurrentValue ? JSON.parse(log.serializedCurrentValue) : undefined;
@@ -30,8 +29,12 @@ export abstract class ChildWorkerFactory {
                     }
                     else
                         log.inputs = reduceMethodArguments(extractParams(log.serializedData), log.serializedInputs);
-                    log.output = log.serializedOutput ? JSON.parse(log.serializedOutput) : undefined;
-
+                    try {
+                        log.output = log.serializedOutput ? JSON.parse(log.serializedOutput) : undefined;
+                    }
+                    catch (e) {
+                        log.output = log.serializedOutput;
+                    }
                     delete log.startTime;
                     delete log.endTime;
                     delete log.serializedInputs;

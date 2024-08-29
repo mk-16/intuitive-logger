@@ -1,6 +1,6 @@
 export interface MonitorType {
     (...args: any[]): any;
-    new <T extends object>(...args: [T, LogScope?, LogContext?, ...any]): T;
+    new <T extends object>(...args: [T, ...any]): T;
 }
 
 export type ModernArguments<T extends Function> = [T, DecoratorContext];

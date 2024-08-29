@@ -14,10 +14,9 @@ export function applyHandler<T>(this: undefined | "method", target: T extends Fu
     if (output instanceof Promise) {
         output.then(data => {
             log.endTime = performance.now();
-            log.output = data;
+            log.serializedOutput = serializeOutput(data);
             LoggerWorker.postLog(log);
         });
-        log.output = "Promise";
     }
     LoggerWorker.postLog(log);
     return output;
