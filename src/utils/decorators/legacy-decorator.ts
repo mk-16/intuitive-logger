@@ -1,5 +1,5 @@
 import { LoggerWorker } from "../../worker/main/main-worker.js";
-import { serializeInputs, serializeOutput } from "../functions/serialize-inputs.js";
+import { serializeInputs, serializeOutput } from "../functions/serialize-target/serialize-target.js";
 import { ClassMethodLog } from "../log/log.js";
 
 

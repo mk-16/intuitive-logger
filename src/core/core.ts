@@ -1,8 +1,8 @@
 import { DecoratorHandler } from "../utils/decorators/decorator-handler.js";
-import { applyHandler } from "../utils/handlers/apply-handler.js";
-import { constructHandler } from "../utils/handlers/construct-handler.js";
-import { definePropertyHandler } from "../utils/handlers/define-property-handler.js";
-import { deletePropertyHandler } from "../utils/handlers/delete-property-handler.js";
+import { applyHandler } from "../utils/handlers/apply-handler/apply-handler.js";
+import { constructHandler } from "../utils/handlers/construct-handler/construct-handler.js";
+import { definePropertyHandler } from "../utils/handlers/define-property-handler/define-property-handler.js";
+import { deletePropertyHandler } from "../utils/handlers/delete-property-handler/delete-property-handler.js";
 import type { MonitorType } from "../utils/types/globals.js";
 
 

@@ -1,5 +1,5 @@
-import { applyHandler } from "../handlers/apply-handler.js";
-import { constructHandler } from "../handlers/construct-handler.js";
+import { applyHandler } from "../handlers/apply-handler/apply-handler.js";
+import { constructHandler } from "../handlers/construct-handler/construct-handler.js";
 
 export function modernDecorator<T extends object>(target: T, context: DecoratorContext) {
     if (context.kind == 'class')

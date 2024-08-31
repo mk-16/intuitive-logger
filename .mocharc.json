@@ -1,0 +1,13 @@
+{
+    "spec": ["src/**/*.spec.ts"],
+    "extension": ["ts"],
+    "package": "./package.json",
+    "require": ["ts-node/register"],
+    "watch-files": ["src/**/*.ts"],
+    "ignore": ["dist/**/*.spec.ts"],
+    "node-option": [
+        "loader=ts-node/esm",
+        "watch"
+    ],
+    "reporter": "spec"
+}

@@ -1,5 +1,5 @@
 
-import { constructHandler } from "../handlers/construct-handler.js";
+import { constructHandler } from "../handlers/construct-handler/construct-handler.js";
 import { LegacyArguments, ModernArguments } from "../types/globals.js";
 import { modernDecoratorGuard } from "./decorator-kind-guard.js";
 import { legacyMethodDecorator } from "./legacy-decorator.js";

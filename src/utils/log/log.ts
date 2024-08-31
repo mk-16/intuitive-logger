@@ -7,7 +7,7 @@ export class Log {
     serializedData: string | undefined;
     startTime: number | undefined;
     endTime: number | undefined;
-    serializedInputs: string[] | undefined;
+    serializedInputs: string | undefined;
     serializedOutput: string | undefined;
     inputs: Record<string, unknown> | undefined;
     output: unknown;

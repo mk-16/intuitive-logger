@@ -1,4 +1,5 @@
 {
+  "exclude": ["src/**/test-utils", "src/**/*.spec.ts", "custom-mocha-reporter.cts"],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */
     /* Projects */

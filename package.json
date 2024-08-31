@@ -4,13 +4,14 @@
   "type": "module",
   "types": "./dist/types",
   "main": "./dist/index.js",
-  "files": ["./dist"],
-  "funding": {
-    "url": "https://opencollective.com/intuitive-logger",
-    "type": "opencollective"
-  },
+  "files": [
+    "./dist"
+  ],
+
   "scripts": {
-    "test": "test",
+    "build": "tsc",
+    "test": "mocha --config=./.mocharc.json",
+    "test:specific": "mocha --config=./.mocharc.json --grep 'Serializer'",
     "nodemon": "nodemon"
   },
   "repository": {
@@ -24,7 +25,7 @@
     "backend"
   ],
   "author": "Michael Laloush",
-  "readme": "./README.md",
+  "readme": "",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mk-16/intuitive-logger/issues"
@@ -32,8 +33,13 @@
   "homepage": "https://github.com/mk-16/intuitive-logger#readme",
   "description": "",
   "devDependencies": {
+    "@types/chai": "^4.3.19",
+    "@types/mocha": "^10.0.7",
     "@types/node": "^22.3.0",
-    "nodemon": "^3.1.4"
+    "chai": "^5.1.1",
+    "mocha": "^10.7.3",
+    "nodemon": "^3.1.4",
+    "ts-node": "^10.9.2"
   },
   "dependencies": {
     "ajv": "^8.17.1",
