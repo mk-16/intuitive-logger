@@ -14,6 +14,7 @@ export const emptyLambdaMochaFn = <T>(...args: any[]) => {
             expect(log).to.have.property('endTime').to.be.a('number');
             done();
         })
+
         applyHandler(args[0], {}, args[1]);
     } as Mocha.Func
 }
@@ -25,7 +26,7 @@ function suitFn(this: Mocha.Suite) {
     afterEach('cleaning', function (this: Context, done: Done) {
         done();
     });
-    it('Generate the expected log for lambda function:     const target = () => {}', emptyLambdaMochaFn((param: 1) => 3,  [1, 3, 2]))
+    it('Generate the expected log for lambda function:     const target = () => {}', emptyLambdaMochaFn((param: { a: 1, b: 3 }, anotherParam: { something: any }, ...rest: any[]) => 3, [{ a: 1, b: 3 }, { something: new Promise(() => { }) }, 2, [1, 2, 3]]))
 }
 
 export const applyHandlerSpec = () => describe('Apply handler', suitFn);

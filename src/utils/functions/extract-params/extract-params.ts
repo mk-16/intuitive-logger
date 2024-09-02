@@ -1,4 +1,4 @@
-import { mapParams } from "../map-params/map-params.js"
+import { reduceParams } from "../map-params/reduce-params.js"
 
 
 export function extractParams(stringifiedFunction: string | undefined) {
@@ -6,8 +6,8 @@ export function extractParams(stringifiedFunction: string | undefined) {
         return []
 
     return stringifiedFunction.includes('class') ?
-        mapParams(stringifiedFunction.split('constructor(')[1].split(')')[0].split(',')) :
-        mapParams(stringifiedFunction.split(')')[0].split('(')[1].split(','));
+        reduceParams(stringifiedFunction.split('constructor(')[1].split(')')[0].split(',')) :
+        reduceParams(stringifiedFunction.split(')')[0].split('(')[1].split(','));
 }
 
 

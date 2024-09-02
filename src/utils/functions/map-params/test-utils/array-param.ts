@@ -1,9 +1,9 @@
 import { Context, Done } from "mocha";
-import { mapParams } from "../map-params.js";
+import { reduceParams } from "../reduce-params.js";
 
-export const arrayParams = () => {
+export const reduceArrayParams = () => {
     return function (this: Context, done: Done) {
-        const params = mapParams([' [a', ' b ', ' c]']);
+        const params = reduceParams([' [a', ' b ', ' c]']);
         done();
     } as Mocha.Func
 }

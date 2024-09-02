@@ -11,6 +11,7 @@ export function applyHandler<T>(this: undefined | "method" | unknown, target: T 
     log.endTime = performance.now();
     log.serializedOutput = serializeTarget(output);
     log.stack = new Error().stack;
+    console.log({ log })
     if (output instanceof Promise) {
         output.then(data => {
             log.endTime = performance.now();

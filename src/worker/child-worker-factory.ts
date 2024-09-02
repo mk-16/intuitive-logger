@@ -1,7 +1,7 @@
 import { fromEvent, map } from "rxjs";
 import { extractParams } from "../utils/functions/extract-params/extract-params.js";
 import { findFileInStack } from "../utils/functions/find-file-in-stack/find-file-in-stack.js";
-import { reduceMethodArguments } from "../utils/functions/reduce-method-arguments.js";
+import { mapParamsToValues } from "../utils/functions/map-params-to-values/map-params-to-values.js";
 import { propertyLogGuard } from "../utils/log/log-guards.js";
 import { Log } from "../utils/log/log.js";
 import { DecoratorLogKind } from "../utils/types/enums.js";
@@ -28,7 +28,7 @@ export abstract class ChildWorkerFactory {
                         delete log.serializedCurrentValue;
                     }
                     else
-                        log.inputs = reduceMethodArguments(extractParams(log.serializedData), JSON.parse(log.serializedInputs ?? ''));
+                        log.inputs = mapParamsToValues(extractParams(log.serializedData), JSON.parse(log.serializedInputs ?? ''));
                     try {
                         log.output = log.serializedOutput ? JSON.parse(log.serializedOutput) : undefined;
                     }
@@ -40,6 +40,7 @@ export abstract class ChildWorkerFactory {
                     delete log.serializedInputs;
                     delete log.serializedOutput;
                     delete log.serializedData;
+                    // console.log({ log, params: log.inputs?.param, rest: log.inputs?.rest, anotherParam: log.inputs?.anotherParam })
                     return log;
                 }),
             )

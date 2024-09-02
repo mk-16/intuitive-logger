@@ -4,6 +4,6 @@ import { applyHandlerSpec } from "./apply-handler/apply-handler.spec.js";
 
 
 describe('Handlers', () => {
-    // applyHandlerSpec()
+    applyHandlerSpec()
 });
 

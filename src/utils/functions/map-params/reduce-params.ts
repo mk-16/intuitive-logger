@@ -1,4 +1,4 @@
-export function mapParams(params: string[]) {
+export function reduceParams(params: string[]) {
     return params.map(param =>
         param.includes('{') ?
             param.split('{')[1].trim() :
@@ -10,6 +10,6 @@ export function mapParams(params: string[]) {
                         param.split(']')[0].trim() :
                         param.includes('...') ?
                             param.split('...')[1].trim() :
-                            param
+                            param.trim()
     );
 }

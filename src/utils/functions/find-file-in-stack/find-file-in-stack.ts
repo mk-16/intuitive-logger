@@ -1,6 +1,12 @@
-export function findFileInStack(stack: string | undefined, step: boolean = false) {
-    const stackArray = stack?.split("\n") ?? [];
-    return stackArray[2]?.includes('anonymous') ?
-        stackArray[3]?.split(' ').pop()?.replace(/\(|\)/g, "") :
-        stackArray[2]?.split(' ').pop()?.replace(/\(|\)/g, "");
+export function findFileInStack(stack: string | undefined, ref?: string) {
+    const iterator = stack?.split("\n").slice(1).values();
+    let results = iterator?.next() ?? { done: true, value: '' };
+    // console.log(stack?.split("\n"))
+    // while (!results.done) {
+    //     if (!results.value?.includes('node_modules') &&
+    //         !results.value.includes('node'))
+    //         return results.value.split(' ').pop()?.replace(/\(|\)/g, "");
+    //     results = iterator?.next() ?? { done: true, value: '' };
+    // }
+    return undefined;
 }
