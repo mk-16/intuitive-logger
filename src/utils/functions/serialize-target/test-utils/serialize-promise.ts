@@ -4,7 +4,7 @@ import { expect } from "chai";
 
 export const serializePromise = (promise: Promise<unknown>) => {
     return function (this: Context, done: Done) {
-        expect(serializeTarget(promise)).to.be.a('string').and.equal('Promise');
+        expect(serializeTarget(promise)).to.be.a('string').to.include('promise$');
         done();
     } as Mocha.Func
 }

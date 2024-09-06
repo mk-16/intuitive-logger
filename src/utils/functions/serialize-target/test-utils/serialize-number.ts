@@ -5,7 +5,7 @@ import { expect } from "chai";
 
 export const serializeNumber = (num: number) => {
     return function (this: Context, done: Done) {
-        expect(serializeTarget(num)).to.be.a('string');
+        expect(serializeTarget(num)).to.be.a('string').include('number$');
         done();
     } as Mocha.Func
 }

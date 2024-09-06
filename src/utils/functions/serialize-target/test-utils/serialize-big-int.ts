@@ -4,7 +4,7 @@ import { serializeTarget } from "../serialize-target.js";
 
 export const serializeBigInt = (bigInt: bigint) => {
     return function (this: Context, done: Done) {
-        expect(serializeTarget(bigInt)).to.be.a('string').and.to.include('n');
+        expect(serializeTarget(bigInt)).to.be.a('string').and.to.include('bigint');
         done();
     } as Mocha.Func
 }

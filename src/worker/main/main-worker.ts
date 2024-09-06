@@ -56,7 +56,10 @@ export class LoggerWorker {
         this.#worker.pipe(
             switchMap((worker) => {
                 this.#logStream.stop();
-                return this.#logStream.pipe(tap(log => worker.postMessage(log)));
+                return this.#logStream.pipe(tap(log => {
+                    console.log('HERE IS A LOG');
+                    worker.postMessage(log)
+                }));
             }),
             takeUntil(this.#destroySignal)
         ).subscribe()
