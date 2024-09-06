@@ -1,5 +1,3 @@
-import { serialize } from "v8";
-
 const types = new Map([
     ["bigint", { serialize: <T>(target: T extends Symbol ? T : never) => "bigint$".concat(target.toString()) }],
     ["boolean", { serialize: <T>(target: T extends boolean ? T : never) => "boolean$".concat(target.toString()) }],
