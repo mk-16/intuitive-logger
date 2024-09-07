@@ -152,7 +152,6 @@ This library leverages the power of workers (server-side) and web-workers (clien
 
 
 # Disclamer
-Currently the library supports logging class constructor and method invocation through "legacy" or Typescript v5 "modern" decorators.
 
 I fully intend to gradually add more features and capabilities to the package, such as (but not limted to):
 - [X] Typescript 5 decorators.
