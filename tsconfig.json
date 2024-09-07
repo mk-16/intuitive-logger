@@ -3,7 +3,7 @@
     "node_modules",
     "src/**/test-utils",
     "src/**/*.spec.ts",
-    "./dist/**/*",
+    "dist/**/*",
     "custom-mocha-reporter.cts"
   ],
   "compilerOptions": {
