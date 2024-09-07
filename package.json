@@ -1,6 +1,6 @@
 {
   "name": "intuitive-logger",
-  "version": "1.2.5",
+  "version": "1.2.7",
   "type": "module",
   "types": "./dist/types",
   "main": "./dist/index.js",
@@ -25,7 +25,6 @@
     "backend"
   ],
   "author": "Michael Laloush",
-  "readme": "",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mk-16/intuitive-logger/issues"
