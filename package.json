@@ -1,9 +1,14 @@
 {
   "name": "intuitive-logger",
-  "version": "1.2.9",
+  "version": "1.2.4",
   "type": "module",
-  "types": "./dist/types",
+  "types": "./dist/types/index.d.ts",
   "main": "./dist/index.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+
   "scripts": {
     "build": "tsc",
     "test": "mocha --config=./.mocharc.json",
@@ -21,6 +26,7 @@
     "backend"
   ],
   "author": "Michael Laloush",
+  "readme": "",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mk-16/intuitive-logger/issues"
