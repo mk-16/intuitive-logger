@@ -12,6 +12,7 @@ export class Log {
     inputs: Record<string, unknown> | undefined;
     output: unknown;
     runtime: `${number}ms` | undefined;
+    source: "intuitive-logger-worker" | undefined = "intuitive-logger-worker";
 
     constructor(readonly kind: RegularLogKind | DecoratorLogKind) { }
 }
@@ -52,7 +53,7 @@ export class PropertyLog extends Log {
 
     previousValue: unknown | undefined;
     currentValue: unknown | undefined;
-    
+
     constructor() {
         super(DecoratorLogKind.Property)
         delete this.inputs;

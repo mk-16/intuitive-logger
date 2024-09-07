@@ -1,4 +1,4 @@
-import { from, map, Observable, Observer, Subject, Subscription, switchMap, takeUntil, tap, timer } from "rxjs";
+import { catchError, from, map, Observable, Observer, Subject, Subscription, switchMap, takeUntil, tap, timer } from "rxjs";
 import { Log } from "../../utils/log/log.js";
 
 
@@ -46,8 +46,16 @@ export class LoggerWorker {
 
     static #worker = from(import("node:worker_threads")).pipe(
         switchMap(({ Worker }) => from(import("../server/worker-thread.js"))
-            .pipe(map(({ url }) => new Worker(new URL(url), { "name": "worker-thread" })))
+            .pipe(map(({ url }) => new Worker(new URL(url), { "name": "intuitive-logger-worker" })))
         ),
+        catchError(() =>
+            from(import("../client/web-worker.js"))
+                .pipe(
+                    map(({ url }) =>
+                        new Worker(url, { "name": "intuitive-logger-worker", "type": "module" })
+                    )
+                )
+        )
     );
 
 
@@ -57,17 +65,11 @@ export class LoggerWorker {
             switchMap((worker) => {
                 this.#logStream.stop();
                 return this.#logStream.pipe(tap(log => {
-                    console.log('HERE IS A LOG');
-                    worker.postMessage(log)
+                    worker.postMessage(log);
                 }));
             }),
             takeUntil(this.#destroySignal)
         ).subscribe()
-    }
-
-    static startLogging() {
-
-        console.log(process.env['npm_lifecycle_event'])
     }
 
     static onDestroy() {
@@ -76,49 +78,7 @@ export class LoggerWorker {
         this.#logStream.complete();
     }
 
-    static {
-        //     if (window !== undefined && window.Worker !== undefined)
-        //         import("../client/web-worker.js").then(({ url }) => {
-        //             this.#worker = new Worker(new URL(url), { 'name': "intuitive-logger-web-worker", "type": "module" });
-        //             for (const log of this.#buffer) {
-        //                 try {
-        //                     this.#worker.postMessage(log);
-        //                 } catch (e) {
-        //                     this.#worker.postLog(JSON.parse(JSON.stringify(log)));
-        //                 }
-        //             }
-        //         })
-        //     else
-        //         throw new Error("no window")
-        // }
-        // catch (e) {
-        //     if (process !== undefined) {
-        //         import("node:worker_threads").then(({ Worker }) => {
-        //             import("../server/worker-thread.js").then(({ url }) => {
-        //                 this.#worker = new Worker(new URL(url), { "name": "worker-thread" });
-        //                 for (const log of this.#buffer) {
-        //                     try {
-        //                         this.#worker.postMessage(log);
-        //                     } catch (e) {
-        //                         console.log({LOG: log});
-        //                         this.#worker.postLog(JSON.parse(JSON.stringify(log)));
-        //                     }
-        //                 }
-        //             })
-        //         }).catch(e => console.log("MODULE DOES NOT EXIST", this, process))
-        //     }
-        // }
-    }
-    static on() { }
     static postLog(log: Log) {
-        // if (this.#worker !== undefined) {
-        //     // try {
-        //     //     this.#worker.postMessage(log);
-        //     // } catch (e) {
-        //     //     this.#worker.postMessage(JSON.parse(JSON.stringify(log)));
-        //     // }
-        //     // return;
-        // }
         this.#logStream.next(log);
     }
 }
