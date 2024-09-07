@@ -1,9 +1,9 @@
 {
   "name": "intuitive-logger",
-  "version": "1.2.4",
+  "version": "1.2.15",
   "type": "module",
-  "types": "./dist/types/index.d.ts",
-  "main": "./dist/index.js",
+  "types": "dist/types/index.d.ts",
+  "main": "dist/index.js",
   "files": [
     "dist",
     "README.md"
