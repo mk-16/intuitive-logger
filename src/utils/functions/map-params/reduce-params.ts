@@ -1,5 +1,5 @@
-export function reduceParams(params: string[]) {
-    return params.map(param =>
+export function reduceParams(params: string[] | undefined) {
+    return params?.map(param =>
         param.includes('{') ?
             param.split('{')[1].trim() :
             param.includes('}') ?

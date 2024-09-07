@@ -1,13 +1,9 @@
 {
   "name": "intuitive-logger",
-  "version": "1.2.7",
+  "version": "1.2.9",
   "type": "module",
   "types": "./dist/types",
   "main": "./dist/index.js",
-  "files": [
-    "./dist"
-  ],
-
   "scripts": {
     "build": "tsc",
     "test": "mocha --config=./.mocharc.json",

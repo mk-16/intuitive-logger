@@ -32,7 +32,7 @@ export abstract class ChildWorkerFactory {
                         delete log.serializedCurrentValue;
                     }
                     else
-                        log.inputs = mapParamsToValues(extractParams(log.serializedData), parseTarget(log.serializedInputs) as string[]) as any;
+                        log.inputs = mapParamsToValues(extractParams(log.serializedData) ?? [], parseTarget(log.serializedInputs) as string[]) as any;
                     log.output = log.serializedOutput ? parseTarget(log.serializedOutput) : undefined;
                     delete log.source;
                     delete log.startTime;
