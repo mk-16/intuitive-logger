@@ -1,4 +1,5 @@
 import { DecoratorLogKind, RegularLogKind } from "../types/enums.js";
+import { MonitorOptions } from "../types/globals.js";
 
 export class Log {
     name: string | symbol | undefined;
@@ -11,9 +12,9 @@ export class Log {
     serializedOutput: string | undefined;
     inputs: Record<string, unknown> | undefined;
     output: unknown;
+    configuration: Partial<MonitorOptions> | undefined;
     runtime: `${number}ms` | undefined;
     source: "intuitive-logger-worker" | undefined = "intuitive-logger-worker";
-
     constructor(readonly kind: RegularLogKind | DecoratorLogKind) { }
 }
 

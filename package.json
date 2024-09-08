@@ -1,11 +1,11 @@
 {
   "name": "intuitive-logger",
-  "version": "1.2.15",
+  "version": "1.2.16",
   "type": "module",
   "types": "dist/types/index.d.ts",
   "main": "dist/index.js",
   "files": [
-    "dist",
+    "dist/index.js",
     "README.md"
   ],
 

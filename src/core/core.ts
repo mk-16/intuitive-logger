@@ -34,6 +34,6 @@ function MonitorConstructor(...args: [...any]) {
         return new Proxy(args.shift(), createProxyHandler());
 
     }
-    return DecoratorHandler
+    return DecoratorHandler.bind(args[0])
 }
 export const Monitor = MonitorConstructor as MonitorType;

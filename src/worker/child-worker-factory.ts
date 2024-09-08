@@ -19,12 +19,14 @@ export abstract class ChildWorkerFactory {
                     log.date = new Date().toISOString();
                     log.stack = log.stack ? findFileInStack(log.stack) : undefined;
                     log.runtime = `${parseFloat(((log.endTime ?? 0) - (log.startTime ?? 0)).toFixed(4))}ms`;
-                    log.name = log.kind == DecoratorLogKind.Constructor ?
-                        log.name != undefined ?
-                            log.name.toString().concat('Constructor') :
-                            log.serializedData?.split('class ')[1]?.split(' ')[0].concat('Constructor') :
-                        log.serializedData?.split('(')[0];
-                    log.name = log.name != '' ? log.name : 'anonymous'
+                    log.name = log.configuration?.context?.name ?
+                        log.configuration.context.name :
+                        log.kind == DecoratorLogKind.Constructor ?
+                            log.serializedData?.split('class ')[1]?.split(' ')[0] :
+                            log.serializedData?.split('(')[0];
+                    if (log.name == undefined || log.name == "") {
+                        log.name = 'anonymous'
+                    }
                     if (propertyLogGuard(log)) {
                         log.previousValue = log.serializedPreviousValue ? JSON.parse(log.serializedPreviousValue) : undefined;
                         log.currentValue = log.serializedCurrentValue ? JSON.parse(log.serializedCurrentValue) : undefined;
@@ -34,6 +36,7 @@ export abstract class ChildWorkerFactory {
                     else
                         log.inputs = mapParamsToValues(extractParams(log.serializedData) ?? [], parseTarget(log.serializedInputs) as string[]) as any;
                     log.output = log.serializedOutput ? parseTarget(log.serializedOutput) : undefined;
+                    delete log.configuration;
                     delete log.source;
                     delete log.startTime;
                     delete log.endTime;

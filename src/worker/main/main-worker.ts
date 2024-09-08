@@ -58,8 +58,6 @@ export class LoggerWorker {
         )
     );
 
-
-
     static {
         this.#worker.pipe(
             switchMap((worker) => {
