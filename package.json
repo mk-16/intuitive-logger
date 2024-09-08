@@ -1,6 +1,6 @@
 {
   "name": "intuitive-logger",
-  "version": "1.2.16",
+  "version": "1.2.17",
   "type": "module",
   "types": "dist/types/index.d.ts",
   "main": "dist/index.js",
@@ -20,8 +20,18 @@
     "url": "git+https://github.com/mk-16/intuitive-logger.git"
   },
   "keywords": [
-    "Logger",
-    "Monitoring",
+    "logger",
+    "logging",
+    "terminal",
+    "browser",
+    "server",
+    "node.js",
+    "typescript",
+    "javascript",
+    "asynchronous",
+    "non-blocking",
+    "multi-thread",
+    "monitoring",
     "front-end",
     "backend"
   ],
