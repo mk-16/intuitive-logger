@@ -150,6 +150,21 @@ This library leverages the power of workers (server-side) and web-workers (clien
 
 ### Object Monitoring creates either method's or property's logs
 
+# Updates
+
+## Added global LoggerConfiguration static class (WIP), allowing to:
+* only to set and get the current app's log level.
+
+## Added configuration option for decorators only (WIP), allowing to:
+* Pass tag WIP (awaiting vendor implementation)
+* Pass a vendor WIP (doesn't work at this moment) to use and enable dispatching for external vendors / currently only printing to terminal
+* Pass enviroments object => Record<string, string | undefined>
+* async WIP (currently under beta test) => allow to manipulates if an async method dispatches logs when the invocation happens, when the results happens or when either (both).
+* context WIP (currently only works for class decorator) allows to override context, some bundlers minify the constructor's name. this allows the user to explicitly say what is the class name, scope does nothing at this moment, later meant for grouping.
+
+* log level &  allows the user to triggers a log or disable logging according to log level (can be updated in runtime), it works by taking a number and comparing to the global log level, if its higher or equal (the log level inside the decorator option), a log will be dispatched  
+
+
 
 # Disclamer
 
