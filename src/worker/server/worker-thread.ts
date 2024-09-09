@@ -2,7 +2,7 @@ import { ChildWorkerFactory } from "../child-worker-factory.js";
 import('node:worker_threads')
     .then(({ isMainThread, parentPort }) => {
         if (!isMainThread && parentPort) {
-            ChildWorkerFactory.create(parentPort)
+            ChildWorkerFactory.create(parentPort).subscribe()
         }
     })
     .catch(e => console.log("DID NOT FOUND THE WORKER MODULE", process))

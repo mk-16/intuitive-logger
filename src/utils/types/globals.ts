@@ -1,7 +1,6 @@
-import { ClassConstructorLog, ClassMethodLog, FunctionLog, Log, ObjectLog, PropertyLog } from "../log/log.js";
+import { Log, ObjectLog, PropertyLog } from "../log/log.js";
 
-type KeyofLog = Omit<keyof Log | keyof PropertyLog | keyof ObjectLog |
-    keyof ClassConstructorLog | keyof ClassMethodLog | keyof FunctionLog, "serializedData" | "source" |
+type KeyofLog = Exclude<keyof Log | keyof PropertyLog | keyof ObjectLog, "serializedData" | "source" |
     "serializedOutput" | "serializedInput" | "startTime" | "endTime" | "serializedPreviousValue" |
     "serializedCurrentValue"
 >
@@ -31,7 +30,7 @@ export type MonitorOptions = {
     level: number;
     tag: string;
     post: MonitorVendorOption[];
-    mode: "local" | "network" | "both";
+    mode: "local" | "network" | "both" | "user";
     environments: Record<string, string | undefined>;
     extension: unknown;
     async: "invocation" | "results" | "both";

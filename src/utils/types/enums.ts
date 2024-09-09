@@ -12,3 +12,8 @@ export enum LogType {
     decorator = "decorator",
     regular = "regular"
 }
+
+export enum Errors {
+    noPostCause = `MonitorOptions missing "post" property`,
+    noPostMessage = `Add "post" property or set mode to: "local" or remove it entirely in MonitorOptions`,
+}

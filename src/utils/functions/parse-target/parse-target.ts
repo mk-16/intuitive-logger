@@ -27,9 +27,7 @@ const types = new Map([
     }]
 ] as [string, { parse: Function }][]);
 
-export function parseTarget(target: string | undefined) {
-    if (target == undefined)
-        return {};
+export function parseTarget(target: string | undefined): unknown {
     if (typeof target == "string") {
         const index = target.indexOf("$");
         const type = target.substring(0, index);

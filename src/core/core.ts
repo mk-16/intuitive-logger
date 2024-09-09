@@ -37,3 +37,32 @@ function MonitorConstructor<T extends Function>(...args: [Partial<MonitorOptions
     return DecoratorHandler.bind(args[0] as (Partial<MonitorOptions> | undefined))
 }
 export const Monitor = MonitorConstructor as MonitorType;
+
+
+const monitorOptions: Partial<MonitorOptions> = {
+    post: [{
+        url: "http://localhost:4000/api/test",
+        headers: { "Content-Type": "application/json" },
+    },
+    {
+        url: "http://localhost:3000/api/test",
+        headers: { "Content-Type": "application/json" },
+    }],
+    mode: "user",
+    tag: "event",
+    async: "results",
+    hide: ["extension", "configuration"],
+    environments: process.env,
+}
+// @Monitor(monitorOptions)
+class myClass {
+    title = "title";
+    @Monitor(monitorOptions)
+    lateMethod() {
+        return new Promise(resolve => setTimeout(() => {
+            resolve(true);
+        }, 300))
+    }
+}
+
+new myClass().lateMethod()

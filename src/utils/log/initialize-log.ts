@@ -1,5 +1,5 @@
 import { DecoratorLogKind, RegularLogKind } from "../types/enums.js";
-import { ClassConstructorLog, ClassMethodLog, FunctionLog, Log, ObjectLog } from "./log.js";
+import { ClassConstructorLog, ClassMethodLog, FunctionLog, Log, ObjectLog, PropertyLog } from "./log.js";
 
 export function createLog(kind: RegularLogKind | DecoratorLogKind): Log {
     switch (kind) {
@@ -13,7 +13,7 @@ export function createLog(kind: RegularLogKind | DecoratorLogKind): Log {
             return new ClassMethodLog();
 
         case DecoratorLogKind.Property:
-            throw "not implemented";
+            return new PropertyLog();
 
         case DecoratorLogKind.Constructor:
             return new ClassConstructorLog();
