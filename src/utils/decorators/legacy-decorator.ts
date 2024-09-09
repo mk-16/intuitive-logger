@@ -19,6 +19,7 @@ export function legacyMethodDecorator<T extends Function>(this: Partial<MonitorO
             log.endTime = performance.now();
             log.stack = new Error().stack;
             log.serializedOutput = serializeTarget(results);
+            log.configuration = this;
             switch (this?.async) {
                 case "invocation":
                     LoggerWorker.postLog(log);
@@ -44,6 +45,6 @@ export function legacyMethodDecorator<T extends Function>(this: Partial<MonitorO
             }
             return results;
         }
-        return originalMethod.apply(this, originalArguments);
+        return originalMethod.apply(target, originalArguments);
     };
 }

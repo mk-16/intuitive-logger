@@ -1,6 +1,6 @@
 {
   "name": "intuitive-logger",
-  "version": "1.2.18",
+  "version": "1.2.19",
   "type": "module",
   "types": "dist/types/index.d.ts",
   "main": "dist/index.js",

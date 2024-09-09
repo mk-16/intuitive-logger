@@ -22,7 +22,7 @@ export function DecoratorHandler<T extends new (...args: unknown[]) => any>(this
                 if (descriptor !== undefined)
                     return legacyMethodDecorator.bind(this)(target, property, descriptor);
                 const message = `cannot decorate "${property.toString()}" with Method when experimentalDecorators is set to true in ts-config.json`;
-                const error = new SyntaxError(message);
+                const error = new EvalError('', { cause: message });
                 delete error.stack;
                 throw error;
             } else {

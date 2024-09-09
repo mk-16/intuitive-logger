@@ -52,8 +52,8 @@ export class PropertyLog extends Log {
     serializedPreviousValue: string | undefined;
     serializedCurrentValue: string | undefined;
 
-    previousValue: unknown | undefined;
-    currentValue: unknown | undefined;
+    previousPropertyDescriptor: unknown | undefined;
+    currentPropertyDescriptor: unknown | undefined;
 
     constructor() {
         super(DecoratorLogKind.Property)

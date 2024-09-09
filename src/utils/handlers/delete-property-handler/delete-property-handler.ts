@@ -1,9 +1,11 @@
 import { LoggerWorker } from "../../../worker/main/main-worker.js";
 import { serializeTarget } from "../../functions/serialize-target/serialize-target.js";
 import { PropertyLog } from "../../log/log.js";
+import { MonitorOptions } from "../../types/globals.js";
 
-export function deletePropertyHandler<T extends object, K extends string | symbol>(target: T, property: K extends keyof T ? K : never) {
+export function deletePropertyHandler<T extends object, K extends string | symbol>(this: Partial<MonitorOptions> | undefined, target: T, property: K extends keyof T ? K : never) {
     const log = new PropertyLog();
+    log.configuration = this;
     log.serializedData = property.toString()
     log.serializedPreviousValue = serializeTarget(Reflect.getOwnPropertyDescriptor(target, property));
     log.startTime = performance.now();
