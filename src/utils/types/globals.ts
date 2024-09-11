@@ -28,12 +28,12 @@ export type MonitorOptionContext = {
 
 export type MonitorOptions = {
     level: number;
-    tag: string;
+    tag: string | undefined;
     post: MonitorVendorOption[];
     mode: "local" | "network" | "both" | "user";
     environments: Record<string, string | undefined>;
     extension: unknown;
     async: "invocation" | "results" | "both";
-    context?: Partial<MonitorOptionContext>;
+    context: Partial<MonitorOptionContext>;
     hide: (keyof MonitorOptions | KeyofLog)[]
 }
