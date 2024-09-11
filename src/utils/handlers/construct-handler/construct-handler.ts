@@ -6,7 +6,7 @@ import { MonitorOptions } from "../../types/globals.js";
 
 export function constructHandler<T extends Function>(this: Partial<MonitorOptions> | undefined, target: T extends new (...args: unknown[]) => any ? T : never, argsArray: unknown[], newTarget: Function) {
 
-    if ((this?.level ?? 0) >= LoggerConfiguration.logLevel) {
+    if ((this?.level ?? 0) >= LoggerConfiguration.level) {
         const log = new ClassConstructorLog();
         log.configuration = this;
         log.serializedData = target.toString();

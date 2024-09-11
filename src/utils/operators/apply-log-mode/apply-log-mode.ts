@@ -17,8 +17,8 @@ export function applyLogMode(source: Observable<{ log: Log, configuration: Parti
                     if (configuration?.post)
                         return of(configuration.post.map(endpoint => postLog(endpoint, log)));
                     throw noPostError;
-                case "user":
-                    return of(log);
+                // case "user":
+                //     return of(log);
                 default:
                     return of(undefined).pipe(
                         tap(() => console.log(log)),

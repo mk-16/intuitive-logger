@@ -10,7 +10,7 @@ export function legacyMethodDecorator<T extends Function>(this: Partial<MonitorO
     const log = new ClassMethodLog();
     log.name = property;
     descriptor.value = (...originalArguments: unknown[]) => {
-        if ((this?.level ?? 0) >= LoggerConfiguration.logLevel) {
+        if ((this?.level ?? 0) >= LoggerConfiguration.level) {
 
             log.serializedData = originalMethod.toString();
             log.serializedInputs = serializeTarget(originalArguments);

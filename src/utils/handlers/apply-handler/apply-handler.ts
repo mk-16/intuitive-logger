@@ -5,7 +5,7 @@ import { ClassMethodLog, FunctionLog } from "../../log/log.js";
 import { MonitorOptions } from "../../types/globals.js";
 
 export function applyHandler<T>(this: Partial<MonitorOptions> | undefined, target: T extends Function ? T : never, thisArg: unknown, argsArray: unknown[]) {
-    if ((this?.level ?? 0) >= LoggerConfiguration.logLevel) {
+    if ((this?.level ?? 0) >= LoggerConfiguration.level) {
         const log = this?.context?.source == 'method' ? new ClassMethodLog() : new FunctionLog();
         log.configuration = this;
         log.serializedData = target.toString();

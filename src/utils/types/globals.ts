@@ -1,6 +1,6 @@
 import { Log, ObjectLog, PropertyLog } from "../log/log.js";
 
-type KeyofLog = Exclude<keyof Log | keyof PropertyLog | keyof ObjectLog, "serializedData" | "source" |
+export type KeyofLog = Exclude<keyof Log | keyof PropertyLog | keyof ObjectLog, "serializedData" | "source" |
     "serializedOutput" | "serializedInput" | "startTime" | "endTime" | "serializedPreviousValue" |
     "serializedCurrentValue"
 >
@@ -14,10 +14,9 @@ export type ModernArguments<T extends Function> = [T, DecoratorContext];
 export type LegacyArguments<T> = [T, string | symbol, PropertyDescriptor | undefined];
 export type LogScope = string | symbol;
 export type LogContext = string | symbol;
-export type MonitorVendorHeadersOption = HeadersInit;
 export type MonitorVendorOption = {
     url: string | URL | Request;
-    headers?: MonitorVendorHeadersOption;
+    headers?: HeadersInit;
 }
 export type MonitorOptionContext = {
     scope: string;
@@ -28,10 +27,10 @@ export type MonitorOptionContext = {
 
 export type MonitorOptions = {
     level: number;
-    tag: string | undefined;
+    tag: string| string[];
     post: MonitorVendorOption[];
-    mode: "local" | "network" | "both" | "user";
-    environments: Record<string, string | undefined>;
+    mode: "local" | "network" | "both";
+    environments: Record<string, string>;
     extension: unknown;
     async: "invocation" | "results" | "both";
     context: Partial<MonitorOptionContext>;
