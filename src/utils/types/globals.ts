@@ -1,4 +1,5 @@
 import { Log, ObjectLog, PropertyLog } from "../log/log.js";
+import { AsyncModes, KeysToHide, PostModes } from "./enums.js";
 
 export type KeyofLog = Exclude<keyof Log | keyof PropertyLog | keyof ObjectLog, "serializedData" | "source" |
     "serializedOutput" | "serializedInput" | "startTime" | "endTime" | "serializedPreviousValue" |
@@ -27,12 +28,12 @@ export type MonitorOptionContext = {
 
 export type MonitorOptions = {
     level: number;
-    tag: string| string[];
-    post: MonitorVendorOption[];
-    mode: "local" | "network" | "both";
+    tag: string | Set<string>;
+    post: Map<string | URL | Request, HeadersInit>// MonitorVendorOption[];
+    mode: PostModes;
     environments: Record<string, string>;
     extension: unknown;
-    async: "invocation" | "results" | "both";
+    async: AsyncModes;
     context: Partial<MonitorOptionContext>;
-    hide: (keyof MonitorOptions | KeyofLog)[]
+    hide: KeysToHide[]
 }
