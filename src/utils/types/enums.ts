@@ -22,6 +22,7 @@ export enum Errors {
 export enum PostModes {
     local = "local",
     network = "network",
+    user = "user",
     both = "both"
 }
 
@@ -52,7 +53,7 @@ export enum KeysToHide {
     serializedOutput = "serializedOutput",
     inputs = "inputs",
     output = "output",
-    configuration = "configuration",
+    options = "options",
     runtime = "runtime",
     source = "source",
 

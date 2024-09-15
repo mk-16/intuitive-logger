@@ -1,6 +1,7 @@
 
+import { LoggerConfiguration, MonitorOptions } from "../../core/logger.js";
 import { constructHandler } from "../handlers/construct-handler/construct-handler.js";
-import { LegacyArguments, ModernArguments, MonitorOptions } from "../types/globals.js";
+import { LegacyArguments, ModernArguments } from "../types/globals.js";
 import { modernDecoratorGuard } from "./decorator-kind-guard.js";
 import { legacyMethodDecorator } from "./legacy-decorator.js";
 import { modernDecorator } from "./modern-decorator.js";
@@ -8,7 +9,7 @@ import { modernDecorator } from "./modern-decorator.js";
 
 export function DecoratorHandler<T extends new (...args: unknown[]) => any>(this: Partial<MonitorOptions> | undefined, ...args: ModernArguments<T> | LegacyArguments<T>) {
     if (modernDecoratorGuard(args)) {
-        return modernDecorator.bind(this)(args[0], args[1])
+        return modernDecorator.bind({ options: this ?? LoggerConfiguration.options, type: "method" })(args[0], args[1])
     }
     return (<T extends Function>(target: T, property?: string | symbol, descriptor?: PropertyDescriptor | number) => {
         if (typeof descriptor == "number") {
@@ -27,9 +28,9 @@ export function DecoratorHandler<T extends new (...args: unknown[]) => any>(this
                 throw error;
             } else {
                 return (<T extends new (...args: unknown[]) => T>(target: T) => {
-                    if (this?.context && this.context.name == undefined) {
-                        this.context.name = target.name ?? undefined;
-                    }
+                    // if (this?.context && this.context.name == undefined) {
+                    //     this.context.name = target.name ?? undefined;
+                    // }
                     return new Proxy(target, {
                         construct: constructHandler.bind(this)
                     })

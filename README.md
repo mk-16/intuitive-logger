@@ -229,34 +229,34 @@ This leverages the power of workers (server-side) and web-workers (client-side) 
 
 ### Global configuration object. State: Unstable/Experimental/WIP.
 
-- [ ] Set Application name - **Stage**: Planned
-- [ ] Set default logs behaviours - **Stage**: Planned
-- [ ] Modify default logs behaviours - **Stage**: Planned
+- [x] Set Application name - **Stage**: Done
+- [x] Set default logs behaviours - **Stage**: Done
+- [x] Modify default logs behaviours - **Stage**: Done
 - [x] Set application log level (can be changed at runtime). - **Stage**: Done
 
 ### Monitor options object. State: Unstable/Experimental/WIP.
 
 - [x] Print logs to terminal - **Stage**: Done
-- [ ] Post logs (through fetch API) to external service - **Stage**: Experimental
-- [X] Allow user to configure weather to post, print or both - **Stage**: Done
-- [ ] Allow user to set which fields to post - **Stage**: Limited to core log's fields & configuration fields
+- [x] Post logs (through fetch API) to external service - **Stage**: Experimental
+- [x] Allow user to configure weather to post, print or both - **Stage**: Done
+- [x] Allow user to set which fields to post - **Stage**: Limited to core log's fields & configuration fields
 - [x] Tags (single or array) - **Stage**: Done
 - [x] Runtime log Level (numeric) - **Stage**: Done
-- [ ] Allow user to consume the log instead of posting/printing it. - **Stage**: WIP
-- [x] Allow user to set monitor behaviour for async function to log: **Stage**: Done
+- [x] Allow user to consume the log instead of posting/printing it. - **Stage**: Experimental
+- [x] Allow user to set monitor behaviour for async function to log: - **Stage**: Done
   - [x] Function invocation. **Stage**: Done
   - [x] Promised response value. **Stage**: Done
   - [x] Both **Stage**: Done
 - [x] Allow users to add environment variables. **Stage**: Done
 - [x] Allow users to add custom data as extension (as long as it's serializable). **Stage**: Done
-- [ ] Let user set the context. **Stage**: WIP (property exist, does nothing).
+- [ ] Let user set the context. **Stage**: WIP.
 - [ ] Code author (through git blame when available). **Stage**: Planned.
   
 ### Monitor. State: Unstable/Experimental/WIP.
 
-- [ ] Typescript legacy decorator. **Stage**: Experimental
-- [ ] Typescript 5 decorators. **Stage**: Unstable/Experimental/WIP
-- [ ] Function's monitor. **Stage**: Experimental.
-- [ ] Object's monitor. **Stage**: Experimental.
+- [x] Typescript legacy decorator. **Stage**: Unstable/ Experimental
+- [X] Typescript 5 decorators. **Stage**: Unstable/Experimental/WIP
+- [x] Function's monitor. **Stage**: Unstable/Experimental.
+- [X] Object's monitor. **Stage**: Unstable/Experimental.
 
 I'm not stopping here, there will be more in the future after stable release.

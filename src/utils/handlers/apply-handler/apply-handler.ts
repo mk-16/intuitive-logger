@@ -1,13 +1,12 @@
-import { LoggerConfiguration } from "../../../core/logger.js";
+import { LoggerConfiguration, MonitorOptions } from "../../../core/logger.js";
 import { LoggerWorker } from "../../../worker/main/main-worker.js";
 import { serializeTarget } from "../../functions/serialize-target/serialize-target.js";
 import { ClassMethodLog, FunctionLog } from "../../log/log.js";
-import { MonitorOptions } from "../../types/globals.js";
 
-export function applyHandler<T>(this: Partial<MonitorOptions> | undefined, target: T extends Function ? T : never, thisArg: unknown, argsArray: unknown[]) {
-    if ((this?.level ?? 0) >= LoggerConfiguration.level) {
-        const log = this?.context?.source == 'method' ? new ClassMethodLog() : new FunctionLog();
-        log.configuration = this;
+export function applyHandler<T>(this: { options: Partial<MonitorOptions> | undefined, type: "function" | "method" }, target: T extends Function ? T : never, thisArg: unknown, argsArray: unknown[]) {
+    if ((this.options?.level ?? 0) >= LoggerConfiguration.options.level) {
+        const log = this.type == 'method' ? new ClassMethodLog() : new FunctionLog();
+        log.options = this.options;
         log.serializedData = target.toString();
         log.serializedInputs = serializeTarget(argsArray as unknown[]);
         log.startTime = performance.now();
@@ -15,7 +14,7 @@ export function applyHandler<T>(this: Partial<MonitorOptions> | undefined, targe
         log.endTime = performance.now();
         log.serializedOutput = serializeTarget(results);
         log.stack = new Error().stack;
-        switch (this?.async) {
+        switch (this.options?.async ?? LoggerConfiguration.options.async) {
             case "invocation":
                 LoggerWorker.postLog(log);
                 break;
@@ -26,8 +25,8 @@ export function applyHandler<T>(this: Partial<MonitorOptions> | undefined, targe
                         log.serializedOutput = serializeTarget(data);
                         LoggerWorker.postLog(log);
                     });
+                    break;
                 }
-                break;
             default:
                 LoggerWorker.postLog(log);
                 if (results instanceof Promise) {

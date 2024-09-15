@@ -1,5 +1,6 @@
 import { catchError, from, map, Observer, Subject, Subscription, switchMap, takeUntil, tap } from "rxjs";
-import { Log } from "../../utils/log/log.js";
+import { LoggerConfiguration } from "../../core/logger.js";
+import { InternalLog, Log } from "../../utils/log/log.js";
 
 
 
@@ -40,20 +41,23 @@ export class LoggerWorker {
 
     static #destroySignal = new Subject<void>();
 
-    static #logStream = new ControllableBufferSubject<Log>();
+    static #internalLogStream = new ControllableBufferSubject<InternalLog>();
+    static #logStream = new Subject<Log>();
     static readonly logStream = this.#logStream.asObservable();
 
 
     static #worker = from(import("node:worker_threads")).pipe(
         switchMap(({ Worker }) => from(import("../server/worker-thread.js"))
-            .pipe(map(({ url }) => new Worker(new URL(url), { "name": "intuitive-logger-worker" })))
+            .pipe(
+                map(({ url }) => new Worker(new URL(url), { "name": "intuitive-logger-worker" })),
+                tap(worker => worker.on("message", (log) => this.#logStream.next(log)))
+            )
         ),
         catchError(() =>
             from(import("../client/web-worker.js"))
                 .pipe(
-                    map(({ url }) =>
-                        new Worker(url, { "name": "intuitive-logger-worker", "type": "module" })
-                    )
+                    map(({ url }) => new Worker(url, { "name": "intuitive-logger-worker", "type": "module" })),
+                    tap(worker => worker.onmessage = ({ data }) => this.#logStream.next(data))
                 )
         )
     );
@@ -61,9 +65,9 @@ export class LoggerWorker {
     static {
         this.#worker.pipe(
             switchMap((worker) => {
-                this.#logStream.stop();
-                return this.#logStream.pipe(tap(log => {
-                    worker.postMessage(log);
+                this.#internalLogStream.stop();
+                return this.#internalLogStream.pipe(tap(log => {
+                    worker.postMessage({ log, config: LoggerConfiguration });
                 }));
             }),
             takeUntil(this.#destroySignal)
@@ -73,11 +77,11 @@ export class LoggerWorker {
     static onDestroy() {
         this.#destroySignal.next();
         this.#destroySignal.complete();
-        this.#logStream.complete();
+        this.#internalLogStream.complete();
     }
 
-    static postLog(log: Log) {
-        this.#logStream.next(log);
+    static postLog(log: InternalLog) {
+        this.#internalLogStream.next(log);
     }
 }
 

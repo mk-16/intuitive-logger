@@ -1,14 +1,13 @@
-import { LoggerConfiguration } from "../../../core/logger.js";
+import { LoggerConfiguration, MonitorOptions } from "../../../core/logger.js";
 import { LoggerWorker } from "../../../worker/main/main-worker.js"
 import { serializeTarget } from "../../functions/serialize-target/serialize-target.js";
 import { ClassConstructorLog } from "../../log/log.js";
-import { MonitorOptions } from "../../types/globals.js";
 
 export function constructHandler<T extends Function>(this: Partial<MonitorOptions> | undefined, target: T extends new (...args: unknown[]) => any ? T : never, argsArray: unknown[], newTarget: Function) {
 
-    if ((this?.level ?? 0) >= LoggerConfiguration.level) {
+    if ((this?.level ?? 0) >= LoggerConfiguration.options.level) {
         const log = new ClassConstructorLog();
-        log.configuration = this;
+        log.options = this;
         log.serializedData = target.toString();
         log.serializedInputs = serializeTarget(argsArray);
         log.startTime = performance.now();

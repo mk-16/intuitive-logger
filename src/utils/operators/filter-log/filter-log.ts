@@ -1,8 +1,8 @@
 import { filter, Observable } from "rxjs";
-import { Log } from "../../log/log.js";
+import { Data } from "../../types/globals.js";
 
-export function filterLog(source: Observable<Log | null>) {
+export function filterLog(source: Observable<Data | null>) {
     return source.pipe(
-        filter((data): data is Log => data != null)
+        filter((data): data is Data => data != null)
     )
 }

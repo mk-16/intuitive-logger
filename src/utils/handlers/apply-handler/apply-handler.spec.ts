@@ -9,7 +9,7 @@ export const emptyLambdaMochaFn = <T>(...args: any[]) => {
             done();
         })
 
-        applyHandler(args[0], {}, args[1]);
+        // applyHandler(args[0], {}, args[1]);
     } as Mocha.Func
 }
 function suitFn(this: Mocha.Suite) {

@@ -1,7 +1,7 @@
 import { DecoratorLogKind, RegularLogKind } from "../types/enums.js";
-import { ClassConstructorLog, ClassMethodLog, FunctionLog, Log, ObjectLog, PropertyLog } from "./log.js";
+import { ClassConstructorLog, ClassMethodLog, FunctionLog, InternalLog, ObjectLog, PropertyLog } from "./log.js";
 
-export function createLog(kind: RegularLogKind | DecoratorLogKind): Log {
+export function createLog(kind: RegularLogKind | DecoratorLogKind): InternalLog {
     switch (kind) {
         case RegularLogKind.Function:
             return new FunctionLog();

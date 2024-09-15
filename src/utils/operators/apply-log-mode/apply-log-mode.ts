@@ -1,24 +1,25 @@
 import { filter, map, mergeMap, Observable, of, tap } from "rxjs";
 import { noPostError } from "../../constants/constants.js";
 import { postLog } from "../../functions/post-log/post-log.js";
-import { Log } from "../../log/log.js";
-import { MonitorOptions } from "../../types/globals.js";
+import { InternalLog, Log } from "../../log/log.js";
+import { PostModes } from "../../types/enums.js";
+import { MonitorVendorOption } from "../../types/globals.js";
 
-export function applyLogMode(source: Observable<{ log: Log, configuration: Partial<MonitorOptions> | undefined }>) {
+export function applyLogMode(source: Observable<[Log, keyof typeof PostModes, MonitorVendorOption[] | undefined]>) {
     return source.pipe(
-        mergeMap(({ log, configuration }) => {
-            switch (configuration?.mode) {
-                case "both":
-                    if (configuration?.post)
-                        return of(configuration.post.map(endpoint => postLog(endpoint, log)))
+        mergeMap(([log, mode, endpoints]) => {
+            switch (mode) {
+                case "both":// TODO: THIS CASES DO NOT MATCH THE CURRENT NEED FIX
+                    if (endpoints)
+                        return of(endpoints.map(endpoint => postLog(endpoint, log)))
                             .pipe(map(() => log), tap(console.log));
                     throw noPostError;
                 case "network":
-                    if (configuration?.post)
-                        return of(configuration.post.map(endpoint => postLog(endpoint, log)));
+                    if (endpoints)
+                        return of(endpoints.map(endpoint => postLog(endpoint, log)));
                     throw noPostError;
-                // case "user":
-                //     return of(log);
+                case "user":
+                    return of(log);
                 default:
                     return of(undefined).pipe(
                         tap(() => console.log(log)),

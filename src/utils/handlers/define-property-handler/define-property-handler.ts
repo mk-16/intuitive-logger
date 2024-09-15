@@ -4,7 +4,7 @@ import { PropertyLog } from "../../log/log.js";
 
 export function definePropertyHandler<T extends object, K extends string | symbol>(this: any, target: T, property: K extends keyof T ? K : never, attributes: PropertyDescriptor) {
     const log = new PropertyLog();
-    log.configuration = this;
+    log.options = this;
     log.serializedData = property.toString()
     log.serializedPreviousValue = serializeTarget(Reflect.getOwnPropertyDescriptor(target, property));
     log.startTime = performance.now();
