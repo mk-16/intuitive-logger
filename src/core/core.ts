@@ -20,27 +20,28 @@ function createProxyHandler<T extends Function>(monitorOptions: Partial<MonitorO
         defineProperty: definePropertyHandler.bind(monitorOptions),
         deleteProperty: deletePropertyHandler.bind(monitorOptions),
     }
-    return proxyHandler;
+    return proxyHandler
 }
 
 function MonitorConstructor<T extends Function>(...args: [Partial<MonitorOptions> | undefined] | [T, Partial<MonitorOptions> | undefined]) {
     if (new.target == MonitorConstructor) {
-
-
         if (typeof args[0] == "function") {
             const handler = createProxyHandler(args[1], "function")
             return new Proxy(args.shift() as T, handler);
         }
+
+
+        const handler = createProxyHandler(args[1]);
         function chainCrawler<T extends { prototype: T }>(object: T): any {
             for (const property of getTargetProperties(object)) {
                 if (typeof object[property] == "function") {
+                    // console.log(object[property], handler.apply)
                     object[property] = new Proxy(object[property], handler) as any;
                 }
             }
-            return object?.prototype ? chainCrawler(object.prototype) : null;
+            console.log(object.prototype)
+            return object?.prototype ? chainCrawler(object.prototype) : null
         }
-
-        const handler = createProxyHandler(args[1])
         chainCrawler(args[0] as T);
         // console.log({ handler })
         return new Proxy(args.shift() as T, handler);
@@ -98,7 +99,7 @@ LoggerConfiguration.levels = Object.values(LogLevel).filter(value => typeof valu
 LoggerConfiguration.options.async = "results";
 
 class MyClass {
-    @Monitor({ async: "invocation", mode: "local", level: LogLevel.Warning })
+    // @Monitor({ async: "results", mode: "local", level: LogLevel.Warning })
     async foo(name: string) {
         return new Promise(resolve => setTimeout(() => resolve(3), 300));
     }
@@ -107,5 +108,6 @@ class MyClass {
 const m = new MyClass();
 // m.foo("cunt");
 
-const foo = new Monitor((name: string) => 1231)
-console.log(foo("wtf"))
+// const foo = new Monitor({ method: (name: string) => 1231 })
+const ctor = new Monitor(new MyClass())
+console.log(ctor.foo("test"))

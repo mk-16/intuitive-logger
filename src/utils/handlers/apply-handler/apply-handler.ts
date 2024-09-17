@@ -4,6 +4,8 @@ import { serializeTarget } from "../../functions/serialize-target/serialize-targ
 import { ClassMethodLog, FunctionLog } from "../../log/log.js";
 
 export function applyHandler<T>(this: { options: Partial<MonitorOptions> | undefined, type: "function" | "method" }, target: T extends Function ? T : never, thisArg: unknown, argsArray: unknown[]) {
+    console.log(target)
+
     if ((this.options?.level ?? 0) >= LoggerConfiguration.options.level) {
         const log = this.type == 'method' ? new ClassMethodLog() : new FunctionLog();
         log.options = this.options;
